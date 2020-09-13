@@ -4,6 +4,8 @@ _By Miroslav Bergam_
 
 _September 11th, 2020_
 
+Edit
+
 ### How does the U.S. elect presidents?
 
 U.S. Presidential Elections are not determined by a popular vote, which would entail electing the candidate who acquires the higher sum of votes across the nation. Rather, we elect our president using the *Electoral College*. The Electoral College assigns each state a number of electors based on that state's number of Congresspeople. Those electors vote for presidential candidates based on who the majority of their constituency votes for. Each state is ascribed a number of electoral votes based on its size, and our president is decided by whoever wins an absolute majority of these electoral votes. 
