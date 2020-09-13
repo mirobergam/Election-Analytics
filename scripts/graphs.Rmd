@@ -159,7 +159,7 @@ swing_data %>%
   
   ggplot(aes(x = bucket, y = num, fill = bucket)) + 
   geom_bar(stat="identity") +
-  labs(title = "States Experiencing Strong Electoral Swing in 2016",
+  labs(title = "States that Experienced Strong Electoral Swing in 2016",
        caption = "Republican and Democratic swing defined as 3% change in votes towards respective party",
        y = "Number of States",
        x = "") + 
