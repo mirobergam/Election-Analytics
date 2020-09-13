@@ -1,0 +1,174 @@
+---
+title: "Blog One"
+author: "Miroslav Bergam"
+date: "9/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+library(ggplot2)
+library(usmap)
+
+```
+
+```{r data}
+
+# Reading in election data from the data directory
+
+swing_data <- read_csv("../data/popvote_bystate_1948-2016.csv", col_types = cols(
+  state = col_character(),
+  year = col_double(),
+  total = col_double(),
+  D = col_double(),
+  R = col_double(),
+  R_pv2p = col_double(),
+  D_pv2p = col_double()
+))
+
+vote_data <- read_csv("../data/popvote_1948-2016.csv", col_types = cols(
+  year = col_double(),
+  party = col_character(),
+  winner = col_logical(),
+  candidate = col_character(),
+  pv = col_double(),
+  pv2p = col_double(),
+  incumbent = col_logical(),
+  incumbent_party = col_logical(),
+  prev_admin = col_logical()
+))
+
+```
+
+```{r plot1, warning = FALSE}
+
+swing_data <- swing_data %>%
+  
+  # Renaming variables
+  
+  mutate(dem_share = D_pv2p,
+         rep_share = R_pv2p) %>%
+  
+  select(state, year, dem_share, rep_share) %>% 
+  
+  # Filtering for 2012 and 2016 to compare their swing
+  
+  filter(year == 2012 | year == 2016) %>%
+  
+  # Grouping each state (so each row can represent a state after pivot_wider)
+  
+  group_by(state) %>%
+  
+  # Pivoting 2012/2016 year rows into column names. 
+  # Now four columns: dem share in 2012, dem share 2016, rep share 2012, rep share 2016
+  # Each row is a state
+  
+  pivot_wider(names_from = year, values_from = c(rep_share, dem_share)) %>% 
+  
+  # Calculating Republican swing using equation from section slide
+  
+  mutate(swing = rep_share_2016 / (rep_share_2016 + dem_share_2016) -
+           rep_share_2012 / (rep_share_2012 + dem_share_2012))
+
+
+# Plotting swing data
+
+plot_usmap(data = swing_data, # Feeding data to map
+           regions = "states", # Identifying regions as states
+           values = "swing", # Coloring map based on 
+           labels = TRUE) + # Labelling regions using state abbreviations
+  
+    # Plot aesthetics
+  
+    scale_fill_gradient2(
+      low = "blue",
+      mid = "white",
+      high = "red",
+      breaks = c(-0.1,-0.05,0.05,0.1), 
+      limits = c(-0.15,0.15),
+      name = "Proportion Change in Votes"
+    ) +
+    theme_void() +
+  labs(title = "Swing Between 2012 and 2016 Elections")
+
+
+# Saving plot as image
+
+ggsave("../figures/swing.jpg", height = 4, width = 6)
+
+```
+
+```{r plot2, warning = FALSE}
+
+# Plotting 10 largest republican swings in 2016
+
+swing_data %>%
+  
+  # Filtering out swing lower than 4.9% to capture the top ten
+  
+  filter(swing > 0.049) %>%
+  
+  # Reordering x parameter so that it is in order of largest to smallest swing
+  
+  ggplot(aes(x = reorder(state, swing), y = swing, fill = "#E91D0E")) +
+  
+  # Bar chart
+  
+  geom_col() + 
+  
+  # Aesthetics
+  
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 10)) + 
+  labs(x = "",
+       y = "Change in Proportion of Republican Votes",
+       title = "Top Ten States with Largest Republican Swing in 2016") + 
+  scale_fill_manual(values = "#E91D0E")
+
+ggsave("../figures/swingrank.jpg", height = 4, width = 6)
+
+```
+
+```{r plot3, message = FALSE}
+
+swing_data %>%
+  
+  # Placing each state into bucket based on their level of swing in each direction
+  
+  mutate(bucket = case_when(
+    
+    (swing > 0.03) ~ "Republican Swing",
+    
+    (swing < -0.03) ~ "Democratic Swing",
+    
+    # Assigns all swings less than 3% in each direction to a "small swing"
+    
+    TRUE ~ "Small Swing"
+    
+    )) %>%
+  
+  # Grouping into buckets and counting number of states in each
+  
+  group_by(bucket) %>%
+  
+  summarize(num = n()) %>% 
+  
+  # Plot aesthetics
+  
+  ggplot(aes(x = bucket, y = num, fill = bucket)) + 
+  geom_bar(stat="identity") +
+  labs(title = "States Experiencing Electoral Swing in 2016",
+       caption = "Republican and Democratic swing defined as 3% change in votes towards respective party",
+       y = "Number of States",
+       x = "") + 
+  scale_fill_manual(values = c("Republican Swing" = "red", 
+                                "Democratic Swing" = "blue",
+                                "Small Swing" = "grey")) +
+  theme(legend.position = "none")
+  
+ggsave("../figures/swingcount.jpg", height = 4, width = 6)
+
+```
+
