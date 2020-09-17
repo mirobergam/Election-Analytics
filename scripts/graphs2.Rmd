@@ -7,9 +7,30 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 ```
 
-```{r}
+```{r, warning = FALSE, message = FALSE}
+
+nj_data <- read_csv("../data/local.csv") %>%
+  filter(`State and area` == "New Jersey",
+         Month %in% c(09, 10, 11, 12)) %>%
+  group_by(Year) %>%
+  summarise(unemployment = mean(Unemployed_prce)) %>%
+  mutate(year = Year) %>%
+  select(year, unemployment)
+
+us_data <- read_csv("../data/econ.csv") %>%
+  drop_na() %>%
+  filter(quarter == 4) %>%
+  select(unemployment, year)
+
+nj_voting <- read_csv("../data/popvote_bystate_1948-2016.csv") %>%
+  filter(state == "New Jersey")
+
+nj_voting
 
 ```
+
+
 
