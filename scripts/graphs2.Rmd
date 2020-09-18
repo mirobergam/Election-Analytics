@@ -20,7 +20,7 @@ unemployment_rank <- read_csv("../data/local.csv") %>%
   group_by(`State and area`) %>%
   summarise(avg_unemployment = mean(Unemployed_prce)) %>%
   arrange(desc(avg_unemployment)) %>%
-  head(15)
+  head(25)
 
 unemployment_rank
 
@@ -84,7 +84,7 @@ ga_voting %>%
   geom_smooth(method = "lm") +  
   geom_text(aes(label = year, hjust=-0.1, vjust=1.1)) + 
   labs(title = "Incumbent Voteshare by Georgia Unemployment",
-       subtitle = "There is a weak, negative correlation",
+       subtitle = "There exists a weak, negative correlation",
        x = "Georgia Election Year Q1 and Q2 Unemployment Rate",
        y = "Incumbent 2-Party Voteshare in Georgia")
 
@@ -100,7 +100,7 @@ ga_voting %>%
   geom_text(aes(label = year, hjust=-0.1, vjust=1.1)) + 
   geom_smooth(method = "lm") +
   labs(title = "Incumbent Voteshare by U.S. Unemployment",
-       subtitle = "There is a weak, negative correlation",
+       subtitle = "There exists a very weak, negative correlation",
        x = "U.S. Election Year Q1 and Q2 Unemployment Rate",
        y = "Incumbent 2-Party Voteshare in Georgia")
 
