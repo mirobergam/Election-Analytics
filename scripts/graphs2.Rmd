@@ -98,7 +98,7 @@ nj_voting %>%
   geom_text(aes(label = year, hjust=-0.1, vjust=1.1)) + 
   geom_smooth(method = "lm") +
   labs(title = "Incumbent Voteshare by U.S. Unemployment",
-       subtitle = "There is a weak, negative correnjtion",
+       subtitle = "There is a weak, negative correlation",
        x = "U.S. Fourth Quarter Unemployment Rate",
        y = "Incumbent 2-Party Voteshare")
 
