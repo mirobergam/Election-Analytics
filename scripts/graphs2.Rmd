@@ -1,6 +1,6 @@
 ---
 title: "Blog 2"
-author: "Mirosnjv Bergam"
+author: "Mirosgav Bergam"
 date: "9/17/2020"
 output: html_document
 ---
@@ -24,9 +24,9 @@ unemployment_rank <- read_csv("../data/local.csv") %>%
 
 unemployment_rank
 
-nj_data <- read_csv("../data/local.csv") %>%
-  filter(`State and area` == "New Jersey",
-         Month %in% c(09, 10, 11, 12)) %>%
+ga_data <- read_csv("../data/local.csv") %>%
+  filter(`State and area` == "Georgia",
+         Month %in% c('01', '02', '03', '04', '05', '06', '07', '08')) %>%
   group_by(Year) %>%
   summarise(unemployment = mean(Unemployed_prce)) %>%
   mutate(year = Year) %>%
@@ -34,10 +34,12 @@ nj_data <- read_csv("../data/local.csv") %>%
 
 us_data <- read_csv("../data/econ.csv") %>%
   drop_na() %>%
-  filter(quarter == 4) %>%
+  filter(quarter == 2 | quarter == 1) %>%
+  group_by(year) %>%
+  summarise(unemployment = mean(unemployment)) %>%
   select(unemployment, year)
 
-nj_data
+ga_data
 us_data
 
 ```
@@ -52,55 +54,55 @@ incumbent <- read_csv("../data/presidents.csv") %>%
          year = year - 1) %>%
   select(year, party) 
 
-nj_voting <- read_csv("../data/popvote_bystate_1948-2016.csv") %>%
-  filter(state == "New Jersey") %>%
-  left_join(incumbent, by = "year")# %>%
+ga_voting <- read_csv("../data/popvote_bystate_1948-2016.csv") %>%
+  filter(state == "Georgia") %>%
+  left_join(incumbent, by = "year")
   
-nj_voting <- fill.na(nj_voting) %>%
+ga_voting <- fill.na(ga_voting) %>%
   arrange(year)
 
-nj_voting <- shift.column(data = nj_voting, columns = "party", up = FALSE, len = 1)
+ga_voting <- shift.column(data = ga_voting, columns = "party", up = FALSE, len = 1)
 
-nj_voting <- nj_voting %>%
+ga_voting <- ga_voting %>%
   mutate(incumbent = party.Shifted) %>%
   mutate(incumbent_voteshare = case_when(
     incumbent == "Republican" ~ R_pv2p,
     incumbent == "Democratic" ~ D_pv2p
   )) %>%
-  select(year, incumbent_voteshare) %>%
-  left_join(nj_data, by = "year") %>%
-  mutate(nj_unemployment = unemployment) %>%
+  select(year, incumbent_voteshare, incumbent) %>%
+  left_join(ga_data, by = "year") %>%
+  mutate(ga_unemployment = unemployment) %>%
   select(!unemployment) %>%
   left_join(us_data, by = "year") %>%
   mutate(us_unemployment = unemployment) %>%
   select(!unemployment) %>%
   drop_na()
   
-nj_plot <- nj_voting %>%
-  ggplot(aes(x = nj_unemployment , y = incumbent_voteshare)) +
+ga_voting %>%
+  ggplot(aes(x = ga_unemployment , y = incumbent_voteshare)) +
   geom_point() + 
   geom_smooth(method = "lm") +  
   geom_text(aes(label = year, hjust=-0.1, vjust=1.1)) + 
-  labs(title = "Incumbent Voteshare by New Jersey Unemployment",
+  labs(title = "Incumbent Voteshare by Georgia Unemployment",
        subtitle = "There is a weak, negative correlation",
-       x = "NJ Fourth Quarter Unemployment Rate",
-       y = "Incumbent 2-Party Voteshare")
+       x = "Georgia Election Year Q1 and Q2 Unemployment Rate",
+       y = "Incumbent 2-Party Voteshare in Georgia")
 
-ggsave("../figures/jerseyunemployed.jpg", height = 4, width = 6)
+ggsave("../figures/GAunemployed.jpg", height = 4, width = 6)
 
 ```
 
 ```{r}
 
-nj_voting %>%
-  ggplot(aes(x = us_unemployment, y = incumbent_voteshare, njbel = year)) +
+ga_voting %>%
+  ggplot(aes(x = us_unemployment, y = incumbent_voteshare, label = year)) +
   geom_point() + 
   geom_text(aes(label = year, hjust=-0.1, vjust=1.1)) + 
   geom_smooth(method = "lm") +
   labs(title = "Incumbent Voteshare by U.S. Unemployment",
        subtitle = "There is a weak, negative correlation",
-       x = "U.S. Fourth Quarter Unemployment Rate",
-       y = "Incumbent 2-Party Voteshare")
+       x = "U.S. Election Year Q1 and Q2 Unemployment Rate",
+       y = "Incumbent 2-Party Voteshare in Georgia")
 
 
 ggsave("../figures/usunemployed.jpg", height = 4, width = 6)
@@ -110,16 +112,53 @@ ggsave("../figures/usunemployed.jpg", height = 4, width = 6)
 
 ```{r}
 
-nj <- lm(nj_unemployment ~ incumbent_voteshare, data = nj_voting)
+ga <- lm(ga_unemployment ~ incumbent_voteshare, data = ga_voting)
 
-us <- lm(us_unemployment ~ incumbent_voteshare, data = nj_voting)
+us <- lm(us_unemployment ~ incumbent_voteshare, data = ga_voting)
 
-summary(nj)$r.squared
+summary(ga)$r.squared
 
 summary(us)$r.squared
 
 ```
 
+```{r}
+
+ga_voting %>%
+  ggplot(aes(x = ga_unemployment, y = incumbent_voteshare, label = year, color = incumbent)) +
+  geom_point() + 
+  geom_text(aes(label = year, hjust=-0.1, vjust=1.1)) + 
+  geom_smooth(method = "lm") +
+  scale_color_manual(values = c("Democratic" = "blue", 
+                                "Republican" = "red")) + 
+  labs(title = "Incumbent Voteshare by Georgia Unemployment for Each Party",
+       subtitle = "Negative correlation is present for Republicans, but not Democrats",
+       x = "U.S. Election Year Q1 and Q2 Unemployment Rate",
+       y = "Incumbent 2-Party Voteshare",
+       color = "Incumbent Party")
+
+ggsave("../figures/GAunemployed_party.jpg", height = 4, width = 6)
+
+```
+```{r}
+
+ga_voting %>%
+  ggplot(aes(x = us_unemployment, y = incumbent_voteshare, label = year, color = incumbent)) +
+  geom_point() + 
+  geom_text(aes(label = year, hjust=-0.1, vjust=1.1)) + 
+  geom_smooth(method = "lm") +
+  scale_color_manual(values = c("Democratic" = "blue", 
+                                "Republican" = "red")) + 
+  labs(title = "Incumbent Voteshare by U.S. Unemployment for Each Party",
+       subtitle = "Negative correlation is present for Republicans, but not Democrats",
+       x = "U.S. Election Year Q1 and Q2 Unemployment Rate",
+       y = "Incumbent 2-Party Voteshare in Georgia",
+       color = "Incumbent Party")
+
+
+ggsave("../figures/usunemployed_party.jpg", height = 4, width = 6)
+
+```
 
 
 

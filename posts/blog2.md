@@ -14,6 +14,8 @@ One form of retrospective voting is voting based on the economy, as an individua
 
 ### Fourth Quarter or Full Term?
 
+
+
 ### National unemployment
 
 ![](../figures/usunemployed.jpg)
@@ -21,4 +23,6 @@ One form of retrospective voting is voting based on the economy, as an individua
 ### New Jersey unemployment
 
 ![](../figures/jerseyunemployed.jpg)
+
+### Model Limitations
 
