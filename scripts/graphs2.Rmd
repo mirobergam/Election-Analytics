@@ -86,7 +86,7 @@ nj_plot <- nj_voting %>%
        x = "NJ Fourth Quarter Unemployment Rate",
        y = "Incumbent 2-Party Voteshare")
 
-#ggsave("../figures/jerseyunemployed", height = 4, width = 6)
+ggsave("../figures/jerseyunemployed.jpg", height = 4, width = 6)
 
 ```
 
@@ -103,7 +103,7 @@ nj_voting %>%
        y = "Incumbent 2-Party Voteshare")
 
 
-ggsave("../figures/usunemployed", height = 4, width = 6)
+ggsave("../figures/usunemployed.jpg", height = 4, width = 6)
 
 ```
 
