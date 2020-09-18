@@ -17,6 +17,9 @@ library(useful)
 
 ```{r Reading-Data, warning = FALSE, message = FALSE}
 
+# Reading in data and filtering for the first two quarters of each election year
+# Then averaging the unemployment during that period for each year
+
 ga_data <- read_csv("../data/local.csv") %>%
   filter(`State and area` == "Georgia",
          Month %in% c('01', '02', '03', '04', '05', '06', '07', '08')) %>%
@@ -36,6 +39,8 @@ us_data <- read_csv("../data/econ.csv") %>%
 
 ```{r Data-Cleaning, warning = FALSE, message = FALSE}
 
+# Reading in CSV of US Presidents to get their parties
+
 incumbent <- read_csv("../data/presidents.csv") %>%
   select(Party, office) %>%
   separate(office, into = c("junk", "junk2", "year"), sep = "/") %>%
@@ -44,14 +49,24 @@ incumbent <- read_csv("../data/presidents.csv") %>%
          year = year - 1) %>%
   select(year, party) 
 
+# Joining unemployment data and voting data
+
 ga_voting <- read_csv("../data/popvote_bystate_1948-2016.csv") %>%
   filter(state == "Georgia") %>%
   left_join(incumbent, by = "year")
+
+# Filling in NA values with the value above it for years where
+# there was not an incumbent. Incumbent column now refers to
+# incumbent party, not candidate
   
 ga_voting <- fill.na(ga_voting) %>%
   arrange(year)
 
+# Shifting incumbents up by one so that they correspond to election years
+
 ga_voting <- shift.column(data = ga_voting, columns = "party", up = FALSE, len = 1)
+
+# Joining all data together
 
 ga_voting <- ga_voting %>%
   mutate(incumbent = party.Shifted) %>%
@@ -72,6 +87,8 @@ ga_voting <- ga_voting %>%
 
 ```{r Plot1}
 
+# First plot: GA unemployment by GA incumbent voteshare
+
 ga_voting %>%
   ggplot(aes(x = ga_unemployment , y = incumbent_voteshare)) +
   geom_point() + 
@@ -90,6 +107,8 @@ ggsave("../figures/GAunemployed.jpg", height = 4, width = 6)
 
 ```{r Plot2}
 
+# Second plot: US unemployment by GA incumbent voteshare
+
 ga_voting %>%
   ggplot(aes(x = us_unemployment, y = incumbent_voteshare, label = year)) +
   geom_point() + 
@@ -107,6 +126,8 @@ ggsave("../figures/usunemployed.jpg", height = 4, width = 6)
 ```
 
 ```{r Plot3}
+
+# Third plot: GA unemployment by GA incumbent voteshare, coloring by party
 
 ga_voting %>%
   ggplot(aes(x = ga_unemployment, y = incumbent_voteshare, label = year, color = incumbent)) +
@@ -127,6 +148,8 @@ ggsave("../figures/GAunemployed_party.jpg", height = 4, width = 6)
 ```
 
 ```{r Plot4}
+
+# Fourth plot: US unemployment by GA incumbent voteshare, coloring by party
 
 ga_voting %>%
   ggplot(aes(x = us_unemployment, y = incumbent_voteshare, label = year, color = incumbent)) +
@@ -149,6 +172,8 @@ ggsave("../figures/usunemployed_party.jpg", height = 4, width = 6)
 
 ```{r stats1}
 
+# Printing summary stats
+
 ga <- lm(incumbent_voteshare ~ ga_unemployment, data = ga_voting)
 
 us <- lm(incumbent_voteshare ~ us_unemployment, data = ga_voting)
@@ -160,6 +185,8 @@ summary(us)
 ```
 
 ```{r stats2}
+
+# Printing summary stats
 
 ga_reps <- ga_voting %>%
   filter(incumbent == "Republican")
@@ -177,6 +204,8 @@ summary(ga_rep_model)
 
 ```{r states3}
 
+# Printing summary stats
+
 us_reps <- ga_voting %>%
   filter(incumbent == "Republican")
 
@@ -190,7 +219,10 @@ us_rep_model <- lm(incumbent_voteshare ~ us_unemployment, data = ga_reps)
 summary(us_rep_model)
 
 ```
+
 ```{r newdata}
+
+# Predicting new data
 
 newdata <- data.frame(ga_unemployment = c(6.7))
 
