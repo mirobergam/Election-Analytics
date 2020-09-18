@@ -7,22 +7,15 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+# Importing packages
 library(tidyverse)
 library(mefa) #for fill_na()
 library(useful)
+
 ```
 
 ```{r, warning = FALSE, message = FALSE}
-
-# Ranking unemployment ranks to brainstorm states to model on
-
-unemployment_rank <- read_csv("../data/local.csv") %>%
-  group_by(`State and area`) %>%
-  summarise(avg_unemployment = mean(Unemployed_prce)) %>%
-  arrange(desc(avg_unemployment)) %>%
-  head(25)
-
-unemployment_rank
 
 ga_data <- read_csv("../data/local.csv") %>%
   filter(`State and area` == "Georgia",
@@ -38,9 +31,6 @@ us_data <- read_csv("../data/econ.csv") %>%
   group_by(year) %>%
   summarise(unemployment = mean(unemployment)) %>%
   select(unemployment, year)
-
-ga_data
-us_data
 
 ```
 
@@ -83,7 +73,7 @@ ga_voting %>%
   geom_point() + 
   geom_smooth(method = "lm") +  
   geom_text(aes(label = year, hjust=-0.1, vjust=1.1)) + 
-  labs(title = "Incumbent Voteshare by Georgia Unemployment",
+  labs(title = "Georgian Incumbent Voteshare by Georgia Unemployment",
        subtitle = "There exists a weak, negative correlation",
        x = "Georgia Election Year Q1 and Q2 Unemployment Rate",
        y = "Incumbent 2-Party Voteshare in Georgia")
@@ -99,7 +89,7 @@ ga_voting %>%
   geom_point() + 
   geom_text(aes(label = year, hjust=-0.1, vjust=1.1)) + 
   geom_smooth(method = "lm") +
-  labs(title = "Incumbent Voteshare by U.S. Unemployment",
+  labs(title = "Georgian Incumbent Voteshare by U.S. Unemployment",
        subtitle = "There exists a very weak, negative correlation",
        x = "U.S. Election Year Q1 and Q2 Unemployment Rate",
        y = "Incumbent 2-Party Voteshare in Georgia")
@@ -129,7 +119,6 @@ ggsave("../figures/GAunemployed_party.jpg", height = 4, width = 6)
 ```
 
 ```{r}
-
 ga_voting %>%
   ggplot(aes(x = us_unemployment, y = incumbent_voteshare, label = year, color = incumbent)) +
   geom_point() + 
@@ -150,9 +139,9 @@ ggsave("../figures/usunemployed_party.jpg", height = 4, width = 6)
 
 ```{r stats1}
 
-ga <- lm(ga_unemployment ~ incumbent_voteshare, data = ga_voting)
+ga <- lm(incumbent_voteshare ~ ga_unemployment, data = ga_voting)
 
-us <- lm(us_unemployment ~ incumbent_voteshare, data = ga_voting)
+us <- lm(incumbent_voteshare ~ us_unemployment, data = ga_voting)
 
 summary(ga)
 
@@ -168,9 +157,9 @@ ga_reps <- ga_voting %>%
 ga_dems <- ga_voting %>%
   filter(incumbent == "Democratic")
 
-ga_dems_model <- lm(ga_unemployment ~ incumbent_voteshare, data = ga_dems)
+ga_dems_model <- lm(incumbent_voteshare ~ ga_unemployment, data = ga_dems)
 
-ga_rep_model <- lm(ga_unemployment ~ incumbent_voteshare, data = ga_reps)
+ga_rep_model <- lm(incumbent_voteshare ~ ga_unemployment, data = ga_reps)
 
 summary(ga_rep_model)
 
@@ -184,12 +173,23 @@ us_reps <- ga_voting %>%
 us_dems <- ga_voting %>%
   filter(incumbent == "Democratic")
 
-us_dems_model <- lm(us_unemployment ~ incumbent_voteshare, data = ga_dems)
+us_dems_model <- lm(incumbent_voteshare ~ us_unemployment, data = ga_dems)
 
-us_rep_model <- lm(us_unemployment ~ incumbent_voteshare, data = ga_reps)
+us_rep_model <- lm(incumbent_voteshare ~ us_unemployment, data = ga_reps)
 
 summary(us_rep_model)
 
+```
+```{r}
+ga_2020 <- ga_reps %>%
+  add_row(year = 2020, 
+          ga_unemployment = ((3.1 + 3.1 + 4.6 + 12.6 + 9.4 + 7.6 + 7.6 + 5.6)/8), 
+          incumbent = "Republican") %>%
+  filter(year == 2020) 
+
+newdata <- data.frame(ga_unemployment = c(6.7))
+
+predict(ga_rep_model, newdata = newdata, interval = "prediction")
 ```
 
 
