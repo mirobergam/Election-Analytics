@@ -63,7 +63,7 @@ The average unemployment rate in the first two quarters of 2020 in Georgia was 6
 
 48.8% is a reasonable prediction for Trump's voteshare in Georgia, as Georgia is a swing state and voters may respond poorly to recent changes in the economy under his leadership. However, particularly with this election, we must be careful about using old data to predict our new outcome, as COVID-19 has yielded unprecedented changes to our economy that were not present in previous elections.
 
-### Conclusions and Model Limitations
+### Conclusions and model limitations
 
 Based on these models, it seems that voters in Georgia care more about state-level unemployment than national unemployment when deciding whether or not to vote for the incumbent party, but only when the incumbent party is Republican. This is in keeping with the findings of [Burden and Wichowsky (2014)](https://www.jstor.org/stable/10.1017/s0022381614000437), which concludes that Republicans incumbents have more to lose from high unemployment rates during their term in office. 
 
