@@ -1,6 +1,6 @@
 ---
 title: "Blog 2"
-author: "Miroslav Bergam"
+author: "Mirosnjv Bergam"
 date: "9/17/2020"
 output: html_document
 ---
@@ -8,9 +8,21 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(mefa) #for fill_na()
+library(useful)
 ```
 
 ```{r, warning = FALSE, message = FALSE}
+
+# Ranking unemployment ranks to brainstorm states to model on
+
+unemployment_rank <- read_csv("../data/local.csv") %>%
+  group_by(`State and area`) %>%
+  summarise(avg_unemployment = mean(Unemployed_prce)) %>%
+  arrange(desc(avg_unemployment)) %>%
+  head(15)
+
+unemployment_rank
 
 nj_data <- read_csv("../data/local.csv") %>%
   filter(`State and area` == "New Jersey",
@@ -25,12 +37,90 @@ us_data <- read_csv("../data/econ.csv") %>%
   filter(quarter == 4) %>%
   select(unemployment, year)
 
-nj_voting <- read_csv("../data/popvote_bystate_1948-2016.csv") %>%
-  filter(state == "New Jersey")
-
-nj_voting
+nj_data
+us_data
 
 ```
+
+```{r, warning = FALSE, message = FALSE}
+
+incumbent <- read_csv("../data/presidents.csv") %>%
+  select(Party, office) %>%
+  separate(office, into = c("junk", "junk2", "year"), sep = "/") %>%
+  mutate(party = Party,
+         year = as.numeric(year),
+         year = year - 1) %>%
+  select(year, party) 
+
+nj_voting <- read_csv("../data/popvote_bystate_1948-2016.csv") %>%
+  filter(state == "New Jersey") %>%
+  left_join(incumbent, by = "year")# %>%
+  
+nj_voting <- fill.na(nj_voting) %>%
+  arrange(year)
+
+nj_voting <- shift.column(data = nj_voting, columns = "party", up = FALSE, len = 1)
+
+nj_voting <- nj_voting %>%
+  mutate(incumbent = party.Shifted) %>%
+  mutate(incumbent_voteshare = case_when(
+    incumbent == "Republican" ~ R_pv2p,
+    incumbent == "Democratic" ~ D_pv2p
+  )) %>%
+  select(year, incumbent_voteshare) %>%
+  left_join(nj_data, by = "year") %>%
+  mutate(nj_unemployment = unemployment) %>%
+  select(!unemployment) %>%
+  left_join(us_data, by = "year") %>%
+  mutate(us_unemployment = unemployment) %>%
+  select(!unemployment) %>%
+  drop_na()
+  
+nj_plot <- nj_voting %>%
+  ggplot(aes(x = nj_unemployment , y = incumbent_voteshare)) +
+  geom_point() + 
+  geom_smooth(method = "lm") +  
+  geom_text(aes(label = year, hjust=-0.1, vjust=1.1)) + 
+  labs(title = "Incumbent Voteshare by New Jersey Unemployment",
+       subtitle = "There is a weak, negative correlation",
+       x = "NJ Fourth Quarter Unemployment Rate",
+       y = "Incumbent 2-Party Voteshare")
+
+#ggsave("../figures/jerseyunemployed", height = 4, width = 6)
+
+```
+
+```{r}
+
+nj_voting %>%
+  ggplot(aes(x = us_unemployment, y = incumbent_voteshare, njbel = year)) +
+  geom_point() + 
+  geom_text(aes(label = year, hjust=-0.1, vjust=1.1)) + 
+  geom_smooth(method = "lm") +
+  labs(title = "Incumbent Voteshare by U.S. Unemployment",
+       subtitle = "There is a weak, negative correnjtion",
+       x = "U.S. Fourth Quarter Unemployment Rate",
+       y = "Incumbent 2-Party Voteshare")
+
+
+ggsave("../figures/usunemployed", height = 4, width = 6)
+
+```
+
+
+```{r}
+
+nj <- lm(nj_unemployment ~ incumbent_voteshare, data = nj_voting)
+
+us <- lm(us_unemployment ~ incumbent_voteshare, data = nj_voting)
+
+summary(nj)$r.squared
+
+summary(us)$r.squared
+
+```
+
+
 
 
 
