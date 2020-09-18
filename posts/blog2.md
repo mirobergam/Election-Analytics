@@ -1,4 +1,4 @@
-## Using Local vs National Economy to Predict Voting Behvaior
+## Do Georgians Care More About the Local or National Economy?
 
 _By Miroslav Bergam_
 
@@ -26,8 +26,7 @@ When modeling the national unemployment rate against Georgia's voteshare for the
 
 ![](../figures/GAunemployed.jpg)
 
-This correlation appears to be slightly stronger and slightly more negative. There is a correlation of -0.066, meaning that with each one percent increase in national unemployment, the incumbent party voteshare decreases by -0.066%. For the same reason as before, this negative relationship makes sense. This model has a $R^2$ value of 0.11, which is notably stronger than the last relationship but still weak. 
-
+This correlation appears to be slightly stronger and slightly more negative. There is a correlation of -0.066, meaning that with each one percent increase in Georgia's unemployment rate, the incumbent party voteshare decreases by -0.066%. For the same reason as before, this negative relationship makes sense. This model has a $R^2$ value of 0.11, which is notably stronger than the last relationship but still quite weak. 
 
 ### The effect of unemployment on voting by party
 
@@ -35,19 +34,18 @@ Perhaps the effect of unemployment on voting is correlated more strongly with wh
 
 ![](../figures/usunemployed_party.jpg)
 
+This plot tells us a much different story. The negative correlation seen earlier does not exist for Democratic incumbents, while the correlation is even more negative for Republicans than in the previous model using national unemployment data, with a -0.5% decrease in Georgian's voteshare for each percentage point of unemployment. The correlation, too, is stronger: an $R^2$ value of 0.21. 
+
+Let's see how these relationships change when we replace national unemployment with unemployment in Georgia. 
+
 ![](../figures/GAunemployed_party.jpg)
 
-If we create two linear models -- one that depicts how 
+Once again, the correlation for Democrats is no longer negative. However, the correlation for Republicans is even stronger and more negative. For each one percent increase in Georgia's unemployment rate, the incumbent Republican candidate's voteshare in Georgia decreases by 0.1%. This relationship has a moderately strong $R^2$ of 0.72, notably stronger than any of the previous relationships. 
 
-This aligns with an interesting finding in [Burden and Wichowsky](https://www.jstor.org/stable/10.1017/s0022381614000437): that Republican incumbents are more su by higher unemployment rates. 
+Both of these graphs aligns with an interesting finding in [Burden and Wichowsky (2014)](https://www.jstor.org/stable/10.1017/s0022381614000437): that Republican incumbents are more susceptible to a loss of votes due to high unemployment rates. 
 
+### Conclusions and Model Limitations
 
+Based on these models, it seems that voters in Georgia care more about state-level unemployment than national unemployment when deciding whether or not to vote for the incumbent party, but only when the incumbent party is Republican. This is in keeping with the findings of [Burden and Wichowsky (2014)](https://www.jstor.org/stable/10.1017/s0022381614000437), which concludes that Republicans incumbents have more to lose from high unemployment rates during their term in office. 
 
-
-
-### Model Limitations
-
-Likely to vary by state-- cannot be generalized to other staates
-very weak R squared values
-needs more predictors to construct a good model
-
+There are several limitations to this model. The first is that these findings cannot be generalized to different states. These models were generated using data on Georgian voters, therefore, while it may be true that several other states experience a similar trend, these analysis must be run on another state's voting data to draw this conclusion. Additionally, most of the relationships in these models had weak $R^2$ values, with the exception of modeling Georgian unemployment against Republican incumbent vote share. Thus, these findings should be taken cautiously. Individuals rarely vote solely on unemployment rates: these models can be improved and the role of unemployment in voting can be better understood by constructing a more comprehensive model with more predictors.

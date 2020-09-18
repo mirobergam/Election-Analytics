@@ -109,23 +109,6 @@ ggsave("../figures/usunemployed.jpg", height = 4, width = 6)
 
 ```
 
-
-```{r}
-
-ga <- lm(ga_unemployment ~ incumbent_voteshare, data = ga_voting)
-
-us <- lm(us_unemployment ~ incumbent_voteshare, data = ga_voting)
-
-summary(ga)$r.squared
-
-summary(us)$r.squared
-
-summary(ga)
-
-summary(us)
-
-```
-
 ```{r}
 
 ga_voting %>%
@@ -137,13 +120,14 @@ ga_voting %>%
                                 "Republican" = "red")) + 
   labs(title = "Incumbent Voteshare by Georgia Unemployment for Each Party",
        subtitle = "Negative correlation is present for Republicans, but not Democrats",
-       x = "U.S. Election Year Q1 and Q2 Unemployment Rate",
+       x = "Georgia Election Year Q1 and Q2 Unemployment Rate",
        y = "Incumbent 2-Party Voteshare",
        color = "Incumbent Party")
 
 ggsave("../figures/GAunemployed_party.jpg", height = 4, width = 6)
 
 ```
+
 ```{r}
 
 ga_voting %>%
@@ -163,6 +147,53 @@ ga_voting %>%
 ggsave("../figures/usunemployed_party.jpg", height = 4, width = 6)
 
 ```
+
+```{r stats1}
+
+ga <- lm(ga_unemployment ~ incumbent_voteshare, data = ga_voting)
+
+us <- lm(us_unemployment ~ incumbent_voteshare, data = ga_voting)
+
+summary(ga)
+
+summary(us)
+
+```
+
+```{r stats1}
+
+ga_reps <- ga_voting %>%
+  filter(incumbent == "Republican")
+
+ga_dems <- ga_voting %>%
+  filter(incumbent == "Democratic")
+
+ga_dems_model <- lm(ga_unemployment ~ incumbent_voteshare, data = ga_dems)
+
+ga_rep_model <- lm(ga_unemployment ~ incumbent_voteshare, data = ga_reps)
+
+summary(ga_rep_model)
+
+```
+
+```{r}
+
+us_reps <- ga_voting %>%
+  filter(incumbent == "Republican")
+
+us_dems <- ga_voting %>%
+  filter(incumbent == "Democratic")
+
+us_dems_model <- lm(us_unemployment ~ incumbent_voteshare, data = ga_dems)
+
+us_rep_model <- lm(us_unemployment ~ incumbent_voteshare, data = ga_reps)
+
+summary(us_rep_model)
+
+```
+
+
+
 
 
 
