@@ -79,8 +79,8 @@ ga_voting %>%
   geom_text(aes(label = year, hjust=-0.1, vjust=1.1)) + 
   labs(title = "Incumbent Voteshare in Georgia by Georgia Unemployment",
        subtitle = "There exists a weak, negative correlation",
-       x = "Georgia Election Year Q1 and Q2 Unemployment Rate",
-       y = "Incumbent 2-Party Voteshare in Georgia",
+       x = "Georgia Election Year Q1 and Q2 Unemployment Rate (%)",
+       y = "Incumbent 2-Party Voteshare in Georgia (%)",
        caption = "Source: US Bureau of Labor Statistics")
 
 ggsave("../figures/GAunemployed.jpg", height = 4, width = 6)
@@ -97,8 +97,8 @@ ga_voting %>%
   geom_smooth(method = "lm") +
   labs(title = "Incumbent Voteshare in Georgia by U.S. Unemployment",
        subtitle = "There exists a very weak, negative correlation",
-       x = "U.S. Election Year Q1 and Q2 Unemployment Rate",
-       y = "Incumbent 2-Party Voteshare in Georgia",
+       x = "U.S. Election Year Q1 and Q2 Unemployment Rate (%)",
+       y = "Incumbent 2-Party Voteshare in Georgia (%)",
        caption = "Source: US Bureau of Labor Statistics")
 
 
@@ -117,8 +117,8 @@ ga_voting %>%
                                 "Republican" = "red")) + 
   labs(title = "Incumbent Voteshare in Georgia by Georgia Unemployment",
        subtitle = "Negative correlation is present for Republicans, but not Democrats",
-       x = "Georgia Election Year Q1 and Q2 Unemployment Rate",
-       y = "Incumbent 2-Party Voteshare in Georgia",
+       x = "Georgia Election Year Q1 and Q2 Unemployment Rate (%)",
+       y = "Incumbent 2-Party Voteshare in Georgia (%)",
        caption = "Source: US Bureau of Labor Statistics",
        color = "Incumbent Party")
 
@@ -137,8 +137,8 @@ ga_voting %>%
                                 "Republican" = "red")) + 
   labs(title = "Incumbent Voteshare in Georgia by U.S. Unemployment",
        subtitle = "Negative correlation is present for Republicans, but not Democrats",
-       x = "U.S. Election Year Q1 and Q2 Unemployment Rate",
-       y = "Incumbent 2-Party Voteshare in Georgia",
+       x = "U.S. Election Year Q1 and Q2 Unemployment Rate (%)",
+       y = "Incumbent 2-Party Voteshare in Georgia (%)",
        caption = "Source: US Bureau of Labor Statistics",
        color = "Incumbent Party")
 
