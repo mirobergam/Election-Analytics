@@ -120,6 +120,10 @@ summary(ga)$r.squared
 
 summary(us)$r.squared
 
+summary(ga)
+
+summary(us)
+
 ```
 
 ```{r}
