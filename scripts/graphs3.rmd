@@ -1,0 +1,149 @@
+---
+title: "blog 3 graphics"
+author: "Miroslav Bergam"
+date: "9/25/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(cowplot)
+library(broom)
+```
+
+```{r data cleaning, warning = FALSE, message = FALSE}
+
+# Reading in data
+
+poll_2016 <- read_csv("../data/polls_2016.csv") %>%
+  select(pollster, adjpoll_clinton, adjpoll_trump, poll_wt) %>%
+  unique()
+
+poll_2020 <- read_csv("../data/polls_2020.csv") %>%
+  select(pollster, candidate_name, candidate_party, pct) %>%
+  unique()
+
+poll_rating_2019 <- read_csv("../data/poll_ratings_2019.csv") %>%
+  select(`538 Grade`, Pollster)
+
+poll_rating_2014 <- read_tsv("../data/poll_ratings_2014.tsv") %>%
+  select(`538 Grade`, Pollster)
+
+# Joining and cleaning data
+
+poll_ratings <- poll_rating_2019 %>%
+  left_join(poll_rating_2014, by = "Pollster") %>%
+  mutate(rating_2014 = `538 Grade.y`,
+         rating_2019 = `538 Grade.x`,
+         pollster = Pollster) %>%
+  select(pollster, rating_2014, rating_2019) %>%
+  drop_na() %>%
+  mutate(rating_2019 = dplyr::recode(rating_2019,
+                `B/C°` = "B/C")) %>%
+  mutate(rating_2019 = dplyr::recode(rating_2019,
+                `C/D°` = "C/D")) %>%
+  mutate(rating_2019 = dplyr::recode(rating_2019,
+                `A/B°` = "A/B"))
+
+poll_ratings$rating_2014 <- factor(poll_ratings$rating_2014, 
+                                   levels = c("A+", "A", "A-", "B+", "B", "B-",
+                                              "A+", "A", "A-", "B+", "B", "B-"))
+
+```
+
+```{r poll ratings}
+
+graph1 <- ggplot(poll_ratings, aes(x = rating_2014, fill = rating_2014)) +
+  geom_bar() +
+  theme(legend.position = "none") + 
+  labs(title = "Ratings Before 2016 Election",
+       x = "Pre-2016 Poll Ratings",
+       y = "Count",
+       caption = "Source: Five-Thirty-Eight")
+
+graph2 <- ggplot(poll_ratings, aes(x = rating_2019, fill = rating_2019)) +
+  geom_bar() +
+  theme(legend.position = "none") + 
+  labs(title = "Ratings Before 2020 Election",
+       x = "Pre-2020 Poll Ratings",
+       y = "Count",
+       caption = "Source: Five-Thirty-Eight")
+
+plot_grid(graph1, graph2)
+
+ggsave("../figures/poll_ratings_cowplot.jpg", height = 4, width = 6)
+
+ggplot(poll_ratings, aes(x = rating_2014, fill = rating_2019)) +
+  geom_bar() +
+  labs(title = "New Poll Ratings Across Elections",
+       x = "Pre-2016 Poll Ratings",
+       y = "Count",
+       fill = "Pre-2020 Poll Ratings",
+       caption = "Source: Five-Thirty-Eight")
+
+ggsave("../figures/updated_poll_ratings.jpg", height = 4, width = 6)
+
+```
+
+```{r weighting}
+
+# Assigning each letter grade a number that will later be turned into a weight
+
+poll_ratings <- poll_ratings %>% 
+  mutate(rating_2014 = case_when(
+    rating_2014 == "A+" ~ 13,
+    rating_2014 == "A" ~ 12,
+    rating_2014 == "A-" ~ 11,
+    rating_2014 == "B+" ~ 10,
+    rating_2014 == "B" ~ 9,
+    rating_2014 == "B-" ~ 8,
+    rating_2014 == "C+" ~ 7,
+    rating_2014 == "C" ~ 6,
+    rating_2014 == "C-" ~ 5,
+    rating_2014 == "D+" ~ 4,
+    rating_2014 == "D" ~ 3,
+    rating_2014 == "D-" ~ 2,
+    rating_2014 == "F" ~ 1
+  )) %>%
+  mutate(rating_2019 = case_when(
+    rating_2019 == "A+" ~ 14,
+    rating_2019 == "A" ~ 13,
+    rating_2019 == "A-" ~ 12,
+    rating_2019 == "A/B" ~ 11,
+    rating_2019 == "B+" ~ 10,
+    rating_2019 == "B" ~ 9,
+    rating_2019 == "B-" ~ 8,
+    rating_2019 == "B/C" ~ 7,
+    rating_2019 == "C+" ~ 6,
+    rating_2019 == "C" ~ 5,
+    rating_2019 == "C-" ~ 4,
+    rating_2019 == "C/D" ~ 3,
+    rating_2019 == "D" ~ 2,
+    rating_2019 == "F" ~ 1
+  ))
+
+final_df <- poll_2016 %>%
+  left_join(poll_ratings, by = "pollster") %>%
+  drop_na() %>%
+  mutate(rating_2019 = rating_2019/sum(rating_2019),
+         rating_2014 = rating_2014/sum(rating_2014)) %>%
+  add_column(clinton = 48.5) %>%
+  add_column(trump = 46.4)
+
+```
+
+```{r modelling}
+
+
+model_2016 <- lm(trump ~ adjpoll_trump, data = final_df, weights = rating_2014)
+
+model_2020 <- lm(trump ~ adjpoll_trump, data = final_df, weights = rating_2019)
+
+tidy(model_2016, conf.int = TRUE, conf.level = 0.90)
+
+tidy(model_2020, conf.int = TRUE, conf.level = 0.90)
+
+
+```
