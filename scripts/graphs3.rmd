@@ -7,10 +7,15 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+# Loading necessary packages
+
 library(tidyverse)
 library(ggplot2)
 library(cowplot)
 library(broom)
+library(infer)
+library(gt)
 ```
 
 ```{r data cleaning, warning = FALSE, message = FALSE}
@@ -31,7 +36,8 @@ poll_rating_2019 <- read_csv("../data/poll_ratings_2019.csv") %>%
 poll_rating_2014 <- read_tsv("../data/poll_ratings_2014.tsv") %>%
   select(`538 Grade`, Pollster)
 
-# Joining and cleaning data
+# Joining 2020 and 2016 poll ratings and cleaning data
+# Dropping NAs so that the only polls are ones present in both datasets
 
 poll_ratings <- poll_rating_2019 %>%
   left_join(poll_rating_2014, by = "Pollster") %>%
@@ -47,6 +53,8 @@ poll_ratings <- poll_rating_2019 %>%
   mutate(rating_2019 = dplyr::recode(rating_2019,
                 `A/B°` = "A/B"))
 
+# Ordering these so that the columns are in the correct order
+
 poll_ratings$rating_2014 <- factor(poll_ratings$rating_2014, 
                                    levels = c("A+", "A", "A-", "B+", "B", "B-",
                                               "C+", "C", "C-", "D+", "D", "D-", "F"))
@@ -59,6 +67,8 @@ poll_ratings$rating_2019 <- factor(poll_ratings$rating_2019,
 
 ```{r poll ratings}
 
+# 2016 ratings graph
+
 graph1 <- ggplot(poll_ratings, aes(x = rating_2014, fill = rating_2014)) +
   geom_bar() +
   theme(legend.position = "none") + 
@@ -66,6 +76,8 @@ graph1 <- ggplot(poll_ratings, aes(x = rating_2014, fill = rating_2014)) +
        x = "Pre-2016 Poll Ratings",
        y = "Count",
        caption = "Source: Five-Thirty-Eight")
+
+# 2020 ratings graph
 
 graph2 <- ggplot(poll_ratings, aes(x = rating_2019, fill = rating_2019)) +
   geom_bar() +
@@ -76,6 +88,8 @@ graph2 <- ggplot(poll_ratings, aes(x = rating_2019, fill = rating_2019)) +
        caption = "Source: Five-Thirty-Eight")
 
 plot_grid(graph1, graph2)
+
+# Rating changes graph
 
 ggsave("../figures/poll_ratings_cowplot.jpg", height = 4, width = 6)
 
@@ -94,6 +108,7 @@ ggsave("../figures/updated_poll_ratings.jpg", height = 4, width = 6)
 ```{r weighting}
 
 # Assigning each letter grade a number that will later be turned into a weight
+# such that A+s are weighted most heavily and Fs are rated worst
 
 poll_ratings <- poll_ratings %>% 
   mutate(rating_2014 = case_when(
@@ -128,26 +143,96 @@ poll_ratings <- poll_ratings %>%
     rating_2019 == "F" ~ 1
   ))
 
-final_df <- poll_2016 %>%
+# Joining poll ratings and 2020 polling data
+
+final_df <- poll_2020 %>%
   left_join(poll_ratings, by = "pollster") %>%
   drop_na() %>%
-  mutate(rating_2019 = rating_2019/sum(rating_2019),
-         rating_2014 = rating_2014/sum(rating_2014)) %>%
-  add_column(clinton = 48.5) %>%
-  add_column(trump = 46.4)
+  filter(candidate_party == "REP")
 
 ```
 
-```{r modelling}
+```{r bootstrap, warning = FALSE, message = FALSE}
 
+# bootstrapping with the replacement 
 
-model_2016 <- lm(trump ~ adjpoll_trump, data = final_df, weights = rating_2014)
+bootstrap_data_2019 <- final_df %>%
+  rep_sample_n(size = 100, reps = 100, replace = TRUE) %>%
+  
+  # Calculating weights
+  
+  mutate(wt_2019 = rating_2019/sum(rating_2019),
+         wt_2014 = rating_2014/sum(rating_2014)) %>%
+  
+  # Weighting each prediction based on the pollster's assigned weight
+  
+  mutate(wt_pred = pct * wt_2019) %>%
+  
+  # Adding them up to get final point estimate prediction
+  # Final DF should be a point estimate for each replicate of bootstrap
+  
+  summarise(sum = sum(wt_pred))
 
-model_2020 <- lm(trump ~ adjpoll_trump, data = final_df, weights = rating_2019)
+# Calculating error margin from the replicates to create upper and lower bound
 
-tidy(model_2016, conf.int = TRUE, conf.level = 0.90)
+error_2019 <- qt(0.975,df=length(bootstrap_data_2019$sum)-1)*sd(bootstrap_data_2019$sum)/sqrt(length(bootstrap_data_2019$sum))
 
-tidy(model_2020, conf.int = TRUE, conf.level = 0.90)
+# Calculating lower and higher bounds
+
+low_2019 <- mean(bootstrap_data_2019$sum)-error_2019
+
+high_2019 <- mean(bootstrap_data_2019$sum)+error_2019
+
+# Doing the same bootstrapping process for 2016 weights
+
+bootstrap_data_2014 <- final_df %>%
+  rep_sample_n(size = 100, reps = 100, replace = TRUE) %>%
+  mutate(wt_2019 = rating_2019/sum(rating_2019),
+         wt_2014 = rating_2014/sum(rating_2014)) %>%
+  mutate(wt_pred = pct * wt_2014) %>%
+  summarise(sum = sum(wt_pred))
+
+error_2014 <- qt(0.975,df=length(bootstrap_data_2014$sum)-1)*sd(bootstrap_data_2014$sum)/sqrt(length(bootstrap_data_2014$sum))
+
+low_2014 <- mean(bootstrap_data_2014$sum)-error_2014
+
+high_2014 <- mean(bootstrap_data_2014$sum)+error_2014
+
+intervals <- tibble(labels = c("Pre-2016 Poll Weights", "Pre-2020 Poll Weights"),
+                    lower = c(low_2014, low_2019),
+                    prediction = c(wt_2014_pred, wt_2019_pred),
+                    upper = c(high_2014, high_2019))
+
+interval_table <- intervals %>%
+  gt() %>%
+  
+  # Titling the table
+  
+  tab_header(title = "Trump's Predicted Voteshare in 2020 Presidential Election", 
+             subtitle = "95% Confidence Intervals")%>%
+  
+  # Labeling the columns
+  
+  cols_label(
+    labels = md(" "),
+    lower = md("**Lower**"),
+    prediction = md("**Prediction**"),
+    upper = md("**Upper**")) %>%
+  
+  # Adding footnote 
+  
+  tab_source_note(md("Source: Five-Thirty-Eight"))
+
+gtsave(interval_table, "../figures/intervals_table.html")
 
 
 ```
+
+```{r interval plot}
+
+intervals %>%
+  select(lower, prediction, upper) %>%
+  ggplot(aes())
+
+```
+

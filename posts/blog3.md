@@ -18,5 +18,16 @@ Seen here is the distribution of 538 poll grades prior to the 2016 election and 
 
 By coloring the distribution of grades for 2016 by the grades for 2020, we can more precisely see how 538 has updated their grades since the last election cycle. As you can see, very few of the As in 2016 retained their grade. The same is true of the Ds, most of which experienced a boost in their grade. These changes are likely due to a combination of two reasons: 538 became more skeptical of several of the highly rated polls following 2016 as many failed to predict Trump's win, and these pollsters updated their methodologies in the last four years correcting for their mistakes in 2016.
 
-### Differences in Pollster Ratings 
+### Predicting 2020 Using Pollster Ratings
+
+We can use these pollster ratings to 
+
+#### Methodology
+
+
+
+#### Prediction
+
+![](../figures/intervals_table.html)
+
 

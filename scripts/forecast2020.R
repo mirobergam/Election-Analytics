@@ -9,9 +9,9 @@ setwd("/Users/mirobergam/Desktop/Election-Analytics")
 ##### Read and merge data ####
 #####------------------------------------------------------#
 
-popvote_df <- read_csv("../data/popvote_1948-2016.csv")
-economy_df <- read_csv("../data/econ.csv")
-poll_df    <- read_csv("../data/pollavg_1968-2016.csv")
+popvote_df <- read_csv("popvote_1948-2016.csv")
+economy_df <- read_csv("econ.csv")
+poll_df    <- read_csv("pollavg_1968-2016.csv")
 
 dat <- popvote_df %>% 
     full_join(poll_df %>% 
