@@ -49,7 +49,11 @@ poll_ratings <- poll_rating_2019 %>%
 
 poll_ratings$rating_2014 <- factor(poll_ratings$rating_2014, 
                                    levels = c("A+", "A", "A-", "B+", "B", "B-",
-                                              "A+", "A", "A-", "B+", "B", "B-"))
+                                              "C+", "C", "C-", "D+", "D", "D-", "F"))
+
+poll_ratings$rating_2019 <- factor(poll_ratings$rating_2019, 
+                                   levels = c("A+", "A", "A-", "A/B", "B+", "B", "B-", "B/C",
+                                              "C+", "C", "C-", "C/D", "D", "F"))
 
 ```
 
@@ -77,7 +81,7 @@ ggsave("../figures/poll_ratings_cowplot.jpg", height = 4, width = 6)
 
 ggplot(poll_ratings, aes(x = rating_2014, fill = rating_2019)) +
   geom_bar() +
-  labs(title = "New Poll Ratings Across Elections",
+  labs(title = "Updated Poll Ratings Across Elections",
        x = "Pre-2016 Poll Ratings",
        y = "Count",
        fill = "Pre-2020 Poll Ratings",
