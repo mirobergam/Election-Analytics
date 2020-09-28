@@ -20,14 +20,16 @@ By coloring the distribution of grades for 2016 by the grades for 2020, we can m
 
 ### Predicting 2020 Using Pollster Ratings
 
-We can use these pollster ratings to 
+We can use these pollster grades to weight each poll's prediction for the outcome of the 2020 election. By doing so, we can fine-tune our prediction based on which pollsters are most accurate. We will calculate two confidence intervals: one that weights each poll's prediction using the pre-2016 grades, and one that weights each poll's prediction using the pre-2020 grades. 
 
 #### Methodology
 
-
+To do this, I assigned each pollster grade a number from 1 (F) to 14 (A+). I then bootstrapped 100 samples of 100 polls (with replacement). Within each replicate, the pollster grades (now numerical) were divided by the total of the pollster grades. These are used to weight each poll, resulting in a prediction for each replicate of the bootstrap. These 100 predictions are used to construct confidence intervals. 
 
 #### Prediction
 
 ![](../figures/intervals_table.html)
+
+Using the 
 
 

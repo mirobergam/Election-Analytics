@@ -223,7 +223,7 @@ interval_table <- intervals %>%
   
   tab_source_note(md("Source: Five-Thirty-Eight"))
 
-gtsave(interval_table, "../figures/intervals_table.html")
+gtsave(interval_table, "../figures/intervals_table.png")
 
 
 ```
