@@ -203,7 +203,7 @@ intervals <- tibble(labels = c("Pre-2016 Poll Weights", "Pre-2020 Poll Weights")
                     prediction = c(wt_2014_pred, wt_2019_pred),
                     upper = c(high_2014, high_2019))
 
-interval_table <- intervals %>%
+intervals %>%
   gt() %>%
   
   # Titling the table
@@ -223,7 +223,7 @@ interval_table <- intervals %>%
   
   tab_source_note(md("Source: Five-Thirty-Eight"))
 
-gtsave(interval_table, "../figures/intervals_table.png")
+gtsave(interval_table, "../figures/intervals_table.html")
 
 
 ```
