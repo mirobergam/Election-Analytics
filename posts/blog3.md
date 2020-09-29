@@ -16,7 +16,7 @@ This is the distribution of 538 poll grades prior to the 2016 election and prior
 
 ![](../figures/updated_poll_ratings.jpg)
 
-By coloring the distribution of 2016 grades by the 2020 grades, we can more precisely see how 538 has updated their grades since the last election cycle. As you can see, very few of the As in 2016 retained their grade. The same is true of the Ds, most of which experienced a boost. These changes are likely a combination of two reasons: 538 became skeptical of several highly rated pollsters following 2016 as many failed to predict Trump's win, and that these pollsters updated their methodologies in the last four years by correcting for their mistakes in 2016.
+By coloring the distribution of 2016 grades by the 2020 grades, we can more precisely see how 538 has updated their grades since the last election cycle. As you can see, very few of the As in 2016 retained their grade. The same is true of the Ds, most of which experienced a boost. These changes are likely due to a combination of two reasons: 538 became skeptical of several highly rated pollsters following 2016 as many failed to predict Trump's win, and that these pollsters updated their methodologies in the last four years by correcting for their mistakes in 2016.
 
 ### Predicting 2020 Using Pollster Ratings
 
@@ -32,5 +32,5 @@ To do this, I assigned each pollster grade a number from 1 (F) to 14 (A+). I the
 
 Using the 2016 pollster grades as weights, it is predicted that Trump will win 42.9% of the popular voteshare, with an lower bound of 42.76% and a upper bound of 43.03%. Using the 2020 pollster grades as weights, the predictions move up by roughly half of a percentage point: 43.35% with a lower bound of 43.23% and a upper bound of 43.51%. 
 
-In 2016, the polls infamously underestimated Trump and falsely predicted Clinton to win. There exists a host of reasons. [One](https://www.mdpi.com/2571-8800/2/1/7) is that polls did a poor job of surveying the less educated, white populations that drove Trump's success because they did not expect them to vote. This could explain why the predictions using 2016 weights predicts a lower voteshare for Trump than the 2020 weights, as the highly graded pollsters in 2016 may again have a Democratic lean in their methodologies. 
+In 2016, many polls infamously underestimated Trump and falsely predicted Clinton to win. There exists a host of reasons. [One](https://www.mdpi.com/2571-8800/2/1/7) is that polls did a poor job of surveying the less educated, white populations that drove Trump's success because they did not expect them to vote. This could explain why using 2016 weights predicts a lower voteshare for Trump than the 2020 weights, as the highly graded pollsters in 2016 may again have a Democratic lean in their methodologies for this data. 
 
