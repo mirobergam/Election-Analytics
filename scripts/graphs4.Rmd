@@ -12,6 +12,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(mefa) #for fill_na()
 library(useful)
+library(sjPlot)
+library(gt)
 
 ```
 
@@ -31,7 +33,7 @@ incumbent <- shift.column(data = incumbent, column = "party", up = FALSE, len = 
   mutate(incumbent_party = party.Shifted) %>%
   select(year,incumbent_party)
 
-# Joining unemployment data and voting data
+# Joining with popular vote dara
 
 pop_vote_state <- read_csv("../data/popvote_bystate_1948-2016.csv") %>%
   pivot_longer(cols = R_pv2p:D_pv2p,
@@ -60,10 +62,7 @@ pop_vote_state <- pop_vote_state %>%
   unite(join, c(Code, year), sep = "", remove = FALSE) %>%
   select(state, year, party, `2pvs`, incumbent_party, join)
 
-#fed_grants_state <- read_csv("../data/fedgrants_bystate_1988-2008.csv") %>%
-#  group_by(state_abb, year) %>%
-#  summarise(total_grants = sum(grant_mil)) %>%
-#  unite(join, c(state_abb, year), sep = "", remove = TRUE)
+# Joining with federal grant data in election years
 
 fed_grants_state <- read_csv("../data/fedgrants_bystate_1988-2008.csv") %>%
   filter(elxn_year == 1) %>%
@@ -72,7 +71,6 @@ fed_grants_state <- read_csv("../data/fedgrants_bystate_1988-2008.csv") %>%
 fed_grants_state <- shift.column(data = fed_grants_state, column = "grant_mil", up = FALSE, len = 1)
 
 fed_grants_state <- fed_grants_state %>%
-  #group_by(state_abb) %>%
   mutate(perc_change = (grant_mil - grant_mil.Shifted)/grant_mil.Shifted * 100) %>%
   unite(join, c(state_abb, year), sep = "", remove = TRUE) %>%
   select(join, perc_change)
@@ -83,6 +81,8 @@ pop_vote_state <- pop_vote_state %>%
   mutate(incumbent = case_when(
     party == incumbent_party ~ TRUE,
     party != incumbent_party ~ FALSE))
+
+# Joining with data on swing states from each election
 
 swing <- read_csv("../data/fedgrants_bystate_1988-2008.csv") %>%
   unite(join, c(state_abb, year), sep = "", remove = TRUE) %>%
@@ -103,17 +103,15 @@ pop_vote_state["swing"][is.na(pop_vote_state["swing"])] <- FALSE
 
 ```{r, warning = FALSE, message = FALSE}
 
-library(gt)
-
-# Precentage change in grants from previous
-
-# do with fundamentals 
-
-# in sample validation, out of sample validation, and out of sample prediction
+# Creating model
 
 model <- lm(`2pvs` ~ incumbent * perc_change * swing, data = pop_vote_state) 
 
 summary(model) 
+
+tab_model(model)
+
+png("../figures/incumbent_table.png", height=1000, width=200)
 
 ```
 
@@ -126,7 +124,8 @@ pop_vote_state %>%
   geom_smooth(method = "lm") +
   labs(x = "% Change in Election-Year Federal Grants",
        y = "Incumbent Two-Party Voteshare",
-       title = "State-level Incumbent Voteshares by Federal Grants")
+       title = "State-level Incumbent Voteshares by Federal Grants",
+       caption = "Source: Kriner and Reeves, 2012")
 
 ggsave("../figures/incumbent_grants.jpg", height = 4, width = 6)
 
@@ -140,7 +139,8 @@ pop_vote_state %>%
   labs(x = "Swing state?",
        y = "Incumbent Two-Party Voteshare",
        title = "State-Level Incumbent Voteshare for Swing States", 
-       subtitle = "Swing states defined on election-to-election basis") +
+       subtitle = "Swing states defined on election-to-election basis",
+       caption = "Source: Kriner and Reeves, 2012") +
   theme(legend.position = "none")
 
 ggsave("../figures/incumbent_swing.jpg", height = 4, width = 6)
@@ -150,9 +150,18 @@ ggsave("../figures/incumbent_swing.jpg", height = 4, width = 6)
 
 ```{r}
 
-swing <- read_csv("../data/fedgrants_bycounty_1988-2008.csv")
+pop_vote_state %>%
+  ggplot(aes(x = incumbent, y = `2pvs`, fill = incumbent)) + 
+  geom_boxplot() + 
+  labs(x = "Incumbent candidate?",
+       y = "State-Level Two-Party Voteshare",
+       title = "State-level Incumbent vs. Non-Incumbent Voteshares") + 
+  theme(legend.position = "none")
+
+ggsave("../figures/incumbent_box.jpg", height = 4, width = 6)
 
 ```
+
 
 
 
