@@ -72,7 +72,7 @@ fed_grants_state <- read_csv("../data/fedgrants_bystate_1988-2008.csv") %>%
 fed_grants_state <- shift.column(data = fed_grants_state, column = "grant_mil", up = FALSE, len = 1)
 
 fed_grants_state <- fed_grants_state %>%
-  group_by(state_abb) %>%
+  #group_by(state_abb) %>%
   mutate(perc_change = (grant_mil - grant_mil.Shifted)/grant_mil.Shifted * 100) %>%
   unite(join, c(state_abb, year), sep = "", remove = TRUE) %>%
   select(join, perc_change)
@@ -117,15 +117,6 @@ summary(model)
 
 ```
 
-```{r}
-
-pop_vote_state <- pop_vote_state %>%
-  filter(incumbent == TRUE) 
-
-summary(lm(`2pvs` ~ perc_change * swing, data = pop_vote_state))
-
-```
-
 ```{r, warning= FALSE, message = FALSE}
 
 pop_vote_state %>%
@@ -136,6 +127,8 @@ pop_vote_state %>%
   labs(x = "% Change in Election-Year Federal Grants",
        y = "Incumbent Two-Party Voteshare",
        title = "State-level Incumbent Voteshares by Federal Grants")
+
+ggsave("../figures/incumbent_grants.jpg", height = 4, width = 6)
 
 ```
 ```{r}
@@ -150,10 +143,16 @@ pop_vote_state %>%
        subtitle = "Swing states defined on election-to-election basis") +
   theme(legend.position = "none")
 
+ggsave("../figures/incumbent_swing.jpg", height = 4, width = 6)
 
 ```
 
 
+```{r}
+
+swing <- read_csv("../data/fedgrants_bycounty_1988-2008.csv")
+
+```
 
 
 
