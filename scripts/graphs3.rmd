@@ -236,3 +236,10 @@ intervals %>%
 
 ```
 
+```{r}
+
+data <- read_csv("../data/popvote_1948-2016.csv")
+
+```
+
+
