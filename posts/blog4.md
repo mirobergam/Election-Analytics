@@ -20,7 +20,7 @@ Before we model incumbency, we can perform some exploratory data analysis to hel
 
 ![](../figures/incumbent_box.jpg)
 
-Incumbent candidates or candidates of the incumbent party have a higher average voteshare at the state-level in presidential elections. It's worth taking a closer look at some other variables to determine how strong this advantage is and under what conditions they hold true. 
+Incumbent candidates or candidates of the incumbent party have a higher average voteshare at the state-level in presidential elections. It's worth taking a closer look at some other variables to determine how strong this advantage is and under what conditions it holds true. 
 
 ![](../figures/incumbent_swing.jpg)
 
