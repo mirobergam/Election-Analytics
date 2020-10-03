@@ -36,7 +36,7 @@ Pork, as we defined it earlier, seems to have a negligible effect on the incumbe
 
 ![](../figures/incumbent_table.png)
 
-Given the findings of our EDA, I decided to model party incumbency (incumbent), swing state (swing), and percentage change in pork from the previous election year (perc_change) against two-party voteshare at the state level, as well as the interactions between these variables. I used percentage change in pork rather than the raw amount of pork because that would not work on a consistent scale across states due to varying state population sizes. Overall, the model has a weak R-squared just shy of 0.1. 
+Given the findings of our EDA, I decided to model party incumbency (incumbent), swing state (swing), and percentage change in pork from the previous election year (perc_change) against two-party voteshare at the state level (2pvs), as well as the interactions between these variables. I used percentage change in pork rather than the raw amount of pork because that would not work on a consistent scale across states due to varying state population sizes. Overall, the model has a weak R-squared just shy of 0.1. 
 
 Controlling for the other two variables, there is a significant (p < 0.001) positive correlation of 7.58 percentage points associated with being a member of the incumbent party. The interaction between incumbency and swing is significant and negative, with incumbency associated with a 7.75% percentage decrease in the two-party voteshare in swing states. Finally, the change in pork from election to election doesn't seem to have a substantial impact on election outcomes, with a small coefficient of 0.09 (controlling for other variables) and a small, non-intuitive negative correlation of -0.18 when interacted with incumbency. 
 
