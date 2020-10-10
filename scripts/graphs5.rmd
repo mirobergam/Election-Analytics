@@ -1,0 +1,153 @@
+---
+title: "graphs5"
+author: "Miroslav Bergam"
+date: "10/6/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+```{r, warning = FALSE, message = FALSE}
+
+creative <- read_csv("../data/ad_creative_2000-2012.csv")
+
+campaign <- read_csv("../data/ad_campaigns_2000-2012.csv")
+
+data <- creative %>%
+  left_join(campaign, by = "creative")
+
+ggplot(data, aes(x = cycle.x, fill = ad_purpose)) + 
+  geom_bar(position = "dodge")
+
+ggplot(data, aes(x = cycle.x, fill = ad_tone)) + 
+  geom_bar(position = "dodge")
+
+
+```
+
+```{r}
+data %>%
+  group_by(party.x, ad_issue) %>%
+  summarise(issue = n()) %>%
+  head()
+```
+
+```{r, warning = FALSE, message = FALSE}
+
+ads <- read_csv("../data/ads_2020.csv")
+polls <- read_csv("../data/polls_2020.csv")
+
+```
+
+```{r, warning = FALSE, message = FALSE}
+
+vep_df <- read_csv("../data/vep_1980-2016.csv")
+poll_state_df <- read_csv("../data/pollavg_bystate_1968-2016.csv")
+pv_state_df <- read_csv("../data/popvote_bystate_1948-2016.csv")
+
+```
+
+```{r}
+
+poll_pvstate_vep_df <- pv_state_df %>%
+  mutate(D_pv = D/total) %>%
+  inner_join(poll_state_df %>% filter(weeks_left == 5)) %>%
+  left_join(vep_df)
+
+vep_2016 <- vep_df %>%
+  filter(year == 2016) %>%
+  filter(state == "New Jersey") %>%
+  select(VEP) %>%
+  pull() %>%
+  as.integer()
+
+nj_rep <- poll_pvstate_vep_df %>% filter(party == "republican", state == "New Jersey")
+nj_dem <- poll_pvstate_vep_df %>% filter(party == "democrat", state == "New Jersey")
+
+nj_rep_glm <- glm(cbind(R, VEP - R) ~ avg_poll, nj_rep, family = "binomial")
+nj_dem_glm <- glm(cbind(D, VEP - D) ~ avg_poll, nj_dem, family = "binomial")
+
+prob_rep_nj <- predict(nj_rep_glm, newdata = data.frame(avg_poll = 44.5), type ="response")[[1]]
+prob_dem_nj <- predict(nj_dem_glm, newdata = data.frame(avg_poll = 50), type ="response")[[1]]
+
+sim_dem_nj_2020 <- rbinom(n = 10000, size = vep_2016, prob = prob_dem_nj)
+sim_rep_nj_2020 <- rbinom(n = 10000, size = vep_2016, prob = prob_rep_nj)
+
+hist(sim_dem_nj_2020)
+hist(sim_rep_nj_2020)
+
+sim_elections <- ((sim_dem_nj_2020 - sim_rep_nj_2020)/(sim_dem_nj_2020 + sim_rep_nj_2020) * 100)
+hist(sim_elections)
+
+```
+
+```{r, warning = FALSE, message = FALSE}
+
+library(geofacet)
+
+poll_pvstate_vep_df <- pv_state_df %>%
+  mutate(D_pv = D/total) %>%
+  inner_join(poll_state_df %>% filter(weeks_left == 5)) %>%
+  left_join(vep_df)
+
+vep <- vep_df %>%
+  filter(year == 2016) %>%
+  mutate(vep = as.integer(VEP))
+  select(vep, state)
+
+states <- unique(poll_pvstate_vep_df$state)
+predictions_df <- tibble(state = c(), dempred = c(), reppred = c())
+
+state_glm_forecast_outputs <- data.frame()
+
+for(current_state in states) {
+  rep <- poll_pvstate_vep_df %>%
+    filter(party == "republican", state == current_state) 
+
+  dem <- poll_pvstate_vep_df %>%
+    filter(party == "democrat", state == current_state)
+  
+  rep_glm <- glm(cbind(R, VEP - R) ~ avg_poll, rep, family = "binomial")
+  dem_glm <- glm(cbind(D, VEP - D) ~ avg_poll, dem, family = "binomial")
+  
+  prob_rep <- predict(rep_glm, 
+                      newdata = data.frame(avg_poll = 43), 
+                      type ="response")[[1]]
+  prob_dem <- predict(dem_glm,
+                      newdata = data.frame(avg_poll = 52), 
+                      type ="response")[[1]]
+  
+  VEP_temp <- vep %>%
+    filter(state == current_state) %>%
+    select(vep) %>%
+    pull()
+  
+  sim_dem_2020 <- rbinom(n = 10000, size = VEP_temp, prob = prob_dem)
+  sim_rep_2020 <- rbinom(n = 10000, size = VEP_temp, prob = prob_rep)
+  
+  predictions_df <- predictions_df %>%
+    add_row(state = current_state, dempred = sim_dem_2020, reppred = sim_rep_2020)
+  
+}
+
+```
+
+```{r}
+
+abbreviations <- read_csv("../data/abbrev.csv")
+
+#predictions_df %>%
+#  mutate(biden_win_margin = (dempred - reppred)/(dempred + reppred) * 100) %>%
+#  ggplot(aes(x = biden_win_margin)) + 
+#  geom_histogram() +
+#  facet_geo(~ state, scales = "free_x") +
+#  xlab("Democratic Win Margin") +
+#  ylab("Count")
+
+```
+
+
+
