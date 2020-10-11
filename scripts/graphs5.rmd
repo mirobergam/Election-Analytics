@@ -7,10 +7,16 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+# Loading in packages
 library(tidyverse)
+library(geofacet)
+
 ```
 
 ```{r, warning = FALSE, message = FALSE}
+
+# Reading in data
 
 vep_df <- read_csv("../data/vep_1980-2016.csv")
 poll_state_df <- read_csv("../data/pollavg_bystate_1968-2016.csv")
@@ -18,12 +24,16 @@ pv_state_df <- read_csv("../data/popvote_bystate_1948-2016.csv")
 
 ```
 
-```{r}
+```{r NJ}
+
+# Reading and cleaning poll data
 
 poll_pvstate_vep_df <- pv_state_df %>%
   mutate(D_pv = D/total) %>%
   inner_join(poll_state_df %>% filter(weeks_left == 5)) %>%
   left_join(vep_df)
+
+# Getting NJ's VEP
 
 vep_2016 <- vep_df %>%
   filter(year == 2016) %>%
@@ -32,42 +42,61 @@ vep_2016 <- vep_df %>%
   pull() %>%
   as.integer()
 
+# Getting poll predictions for trump and biden in NJ
+
 nj_rep <- poll_pvstate_vep_df %>% filter(party == "republican", state == "New Jersey")
 nj_dem <- poll_pvstate_vep_df %>% filter(party == "democrat", state == "New Jersey")
+
+# Creating LOGISTIC models
 
 nj_rep_glm <- glm(cbind(R, VEP - R) ~ avg_poll, nj_rep, family = "binomial")
 nj_dem_glm <- glm(cbind(D, VEP - D) ~ avg_poll, nj_dem, family = "binomial")
 
-prob_rep_nj <- predict(nj_rep_glm, newdata = data.frame(avg_poll = 43), type ="response")[[1]]
-prob_dem_nj <- predict(nj_dem_glm, newdata = data.frame(avg_poll = 52), type ="response")[[1]]
+# Predicting with the most recent NJ poll data (10/10/2020)
+
+prob_rep_nj <- predict(nj_rep_glm, newdata = data.frame(avg_poll = 37), type ="response")[[1]]
+prob_dem_nj <- predict(nj_dem_glm, newdata = data.frame(avg_poll = 54), type ="response")[[1]]
+
+# Creating 10,000 simulations of the number of voters for trump and biden in NJ 
 
 sim_dem_nj_2020 <- rbinom(n = 10000, size = vep_2016, prob = prob_dem_nj)
 sim_rep_nj_2020 <- rbinom(n = 10000, size = vep_2016, prob = prob_rep_nj)
 
+# Calculating win margin
+
 sim_elections <- ((sim_dem_nj_2020 - sim_rep_nj_2020)/(sim_dem_nj_2020 + sim_rep_nj_2020) * 100)
+
+# Open a pdf file
+jpeg("../figures/njbidenwinmargin.jpg") 
 
 hist(sim_elections, xlab = "Win margin in New Jersey",
      main = "Joe Biden's Predicted Win Margin in New Jersey \n Generated from 10,000 Simulations",
-     xlim = c(10, 15))
+     xlim = c(20, 25))
+
+dev.off()
+
 
 ```
 
-```{r, warning = FALSE, message = FALSE}
+```{r US, warning = FALSE, message = FALSE}
 
-library(geofacet)
 
-poll_pvstate_vep_df <- pv_state_df %>%
-  mutate(D_pv = D/total) %>%
-  inner_join(poll_state_df %>% filter(weeks_left == 5)) %>%
-  left_join(vep_df)
+# Getting voting age populations for each state
 
 vep <- vep_df %>%
   filter(year == 2016) %>%
   mutate(vep = as.integer(VEP))
   select(vep, state)
+  
+# Getting list of unique states to loop through
 
 states <- unique(poll_pvstate_vep_df$state)
+
+# Creating empty dataframe to populate with predictions later
+
 predictions_df <- tibble(state = c(), dempred = c(), reppred = c())
+
+# Pulling out the most recent polling data for each state to use in predictions
 
 poll_2020_df <- read_csv("../data/poll_avg_2020.csv") %>%
   filter(modeldate == "10/10/2020") %>%
@@ -77,15 +106,24 @@ poll_2020_df <- read_csv("../data/poll_avg_2020.csv") %>%
   drop_na() %>%
   select(state, party, pct_estimate)
 
+# For each 50 states
+
 for(current_state in states) {
+  
+  # Grabbing poll data
+  
   rep <- poll_pvstate_vep_df %>%
     filter(party == "republican", state == current_state) 
 
   dem <- poll_pvstate_vep_df %>%
     filter(party == "democrat", state == current_state)
   
+  # Creating dem and rep logistic models
+  
   rep_glm <- glm(cbind(R, VEP - R) ~ avg_poll, rep, family = "binomial")
   dem_glm <- glm(cbind(D, VEP - D) ~ avg_poll, dem, family = "binomial")
+  
+  # Grabbing most recent poll data for current state (rep and dem)
   
   rep_avg_poll <- poll_2020_df %>%
     filter(state == current_state,
@@ -99,6 +137,7 @@ for(current_state in states) {
     select(pct_estimate) %>%
     pull()
   
+  # Predicting with most current poll data
   
   prob_rep <- predict(rep_glm, 
                       newdata = data.frame(avg_poll = rep_avg_poll), 
@@ -107,13 +146,19 @@ for(current_state in states) {
                       newdata = data.frame(avg_poll = dem_avg_poll), 
                       type ="response")[[1]]
   
+  # Grabbing the VEP for the current state
+  
   VEP_temp <- vep %>%
     filter(state == current_state) %>%
     select(vep) %>%
     pull()
   
+  # Creating 10,000 simulations of the number of voters for trump and biden in each state
+  
   sim_dem_2020 <- rbinom(n = 10000, size = VEP_temp, prob = prob_dem)
   sim_rep_2020 <- rbinom(n = 10000, size = VEP_temp, prob = prob_rep)
+  
+  # Adding simulations for each state to final DF
   
   predictions_df <- predictions_df %>%
     add_row(state = current_state, dempred = sim_dem_2020, reppred = sim_rep_2020)
@@ -123,11 +168,15 @@ for(current_state in states) {
 ```
 
 
-```{r}
+```{r US2, warning = FALSE, message = FALSE}
+
+# Adding states abbreviations
 
 abbreviations <- read_csv("../data/abbrev.csv") %>%
   mutate(state = State) %>%
   select(Code, state)
+
+# Facet_Geo the state simulations
 
 predictions_df %>%
   left_join(abbreviations, by = "state") %>%
@@ -143,6 +192,7 @@ predictions_df %>%
        title = "Joe Biden's Predicted Win Margin by State")
 
 ggsave("../figures/geofacet.jpg", height = 8, width = 17)
+
 ```
 
 
