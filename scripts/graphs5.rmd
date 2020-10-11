@@ -101,7 +101,11 @@ vep <- vep_df %>%
 states <- unique(poll_pvstate_vep_df$state)
 predictions_df <- tibble(state = c(), dempred = c(), reppred = c())
 
-state_glm_forecast_outputs <- data.frame()
+poll_2020_df <- read_csv("../data/poll_avg_2020.csv") %>%
+  filter(modeldate == "10/10/2020") %>%
+  mutate(party = case_when(
+    candidate_name == "Joseph R. Biden Jr." ~ "Democrat",
+    candidate_name == "Donald Trump" ~ "Republican"))
 
 for(current_state in states) {
   rep <- poll_pvstate_vep_df %>%
@@ -137,15 +141,35 @@ for(current_state in states) {
 
 ```{r}
 
-abbreviations <- read_csv("../data/abbrev.csv")
+abbreviations <- read_csv("../data/abbrev.csv") %>%
+  mutate(state = State) %>%
+  select(Code, state)
 
-#predictions_df %>%
-#  mutate(biden_win_margin = (dempred - reppred)/(dempred + reppred) * 100) %>%
-#  ggplot(aes(x = biden_win_margin)) + 
-#  geom_histogram() +
-#  facet_geo(~ state, scales = "free_x") +
-#  xlab("Democratic Win Margin") +
-#  ylab("Count")
+temp <- predictions_df %>%
+  left_join(abbreviations, by = "state") %>%
+  mutate(biden_win_margin = (dempred - reppred)/(dempred + reppred) * 100) %>%
+  group_by(Code) %>%
+  summarise(win_margin = mean(biden_win_margin))
+
+```
+
+
+```{r}
+
+abbreviations <- read_csv("../data/abbrev.csv") %>%
+  mutate(state = State) %>%
+  select(Code, state)
+
+predictions_df %>%
+  left_join(abbreviations, by = "state") %>%
+  mutate(biden_win_margin = (dempred - reppred)/(dempred + reppred) * 100) %>%
+  ggplot(aes(x = biden_win_margin)) + 
+  geom_histogram(bins = 50) +
+  scale_y_continuous(limits = c(0,900)) + 
+  scale_x_continuous(breaks = c(-10, 0, 5)) +
+  facet_geo(~ Code) +
+  xlab("Democratic Win Margin") +
+  ylab("Count") 
 
 ```
 
