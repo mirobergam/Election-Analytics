@@ -20,6 +20,8 @@ The distribution of these predictions, created by generating 10,000 binomial sim
 
 ![](../figures/geofacet.jpg)
 
-By conducting the same process, we can observe the prediction distributions for each individual state. Some states, such as Vermont, don't display a prediction because there isn't sufficient historical or current polling data available. Here, we can see how key battleground areas like Florida, Pennsylvania, and Michigan have a distribution that is centered closely to 0. Biden does not have a clear win or loss margin due to their uncertainty as swing states, with a margin of -2.4, -0.55, and 1.7 for each state, respectively.
+By conducting the same process, we can observe the prediction distributions for each individual state. Some states, such as Vermont, don't display a prediction because there isn't sufficient historical or current polling data available.
+
+We can see how key battleground areas like Florida, Pennsylvania, and Michigan have a distribution that is centered closely to 0. Here, Biden does not have a clear win or loss margin due to their uncertainty as swing states, with a margin of -2.4, -0.55, and 1.7 for each state, respectively.
 
 It's clear that not all of these predictions seem accurate. In Texas, for example, Biden has a predicted win margin of about 10%. Although Texas is arguably a battleground state, it is not likely that Biden will win by a margin this large in a state that historically votes Republican for presidential elections. Similarly, in Mississippi, a firmly Republican state, this model predicts that Biden will have a large win margin of 20%. For the same reasons, this is very likely untrue and raises suspicion about the performance of this model. This model could likely be improved by the weighting polls included in the model based on their prior accuracy and incorporating fundamental aspects like unemployment rates.
