@@ -88,14 +88,6 @@ vep <- vep_df %>%
   mutate(vep = as.integer(VEP))
   select(vep, state)
   
-# Getting list of unique states to loop through
-
-states <- unique(poll_pvstate_vep_df$state)
-
-# Creating empty dataframe to populate with predictions later
-
-predictions_df <- tibble(state = c(), dempred = c(), reppred = c())
-
 # Pulling out the most recent polling data for each state to use in predictions
 
 poll_2020_df <- read_csv("../data/poll_avg_2020.csv") %>%
@@ -105,6 +97,14 @@ poll_2020_df <- read_csv("../data/poll_avg_2020.csv") %>%
     candidate_name == "Donald Trump" ~ "Republican")) %>%
   drop_na() %>%
   select(state, party, pct_estimate)
+  
+# Getting list of unique states to loop through
+
+states <- unique(poll_pvstate_vep_df$state)
+
+# Creating empty dataframe to populate with predictions later
+
+predictions_df <- tibble(state = c(), dempred = c(), reppred = c())
 
 # For each 50 states
 
