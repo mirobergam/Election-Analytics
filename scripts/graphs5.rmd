@@ -12,38 +12,6 @@ library(tidyverse)
 
 ```{r, warning = FALSE, message = FALSE}
 
-creative <- read_csv("../data/ad_creative_2000-2012.csv")
-
-campaign <- read_csv("../data/ad_campaigns_2000-2012.csv")
-
-data <- creative %>%
-  left_join(campaign, by = "creative")
-
-ggplot(data, aes(x = cycle.x, fill = ad_purpose)) + 
-  geom_bar(position = "dodge")
-
-ggplot(data, aes(x = cycle.x, fill = ad_tone)) + 
-  geom_bar(position = "dodge")
-
-
-```
-
-```{r}
-data %>%
-  group_by(party.x, ad_issue) %>%
-  summarise(issue = n()) %>%
-  head()
-```
-
-```{r, warning = FALSE, message = FALSE}
-
-ads <- read_csv("../data/ads_2020.csv")
-polls <- read_csv("../data/polls_2020.csv")
-
-```
-
-```{r, warning = FALSE, message = FALSE}
-
 vep_df <- read_csv("../data/vep_1980-2016.csv")
 poll_state_df <- read_csv("../data/pollavg_bystate_1968-2016.csv")
 pv_state_df <- read_csv("../data/popvote_bystate_1948-2016.csv")
@@ -70,17 +38,17 @@ nj_dem <- poll_pvstate_vep_df %>% filter(party == "democrat", state == "New Jers
 nj_rep_glm <- glm(cbind(R, VEP - R) ~ avg_poll, nj_rep, family = "binomial")
 nj_dem_glm <- glm(cbind(D, VEP - D) ~ avg_poll, nj_dem, family = "binomial")
 
-prob_rep_nj <- predict(nj_rep_glm, newdata = data.frame(avg_poll = 44.5), type ="response")[[1]]
-prob_dem_nj <- predict(nj_dem_glm, newdata = data.frame(avg_poll = 50), type ="response")[[1]]
+prob_rep_nj <- predict(nj_rep_glm, newdata = data.frame(avg_poll = 43), type ="response")[[1]]
+prob_dem_nj <- predict(nj_dem_glm, newdata = data.frame(avg_poll = 52), type ="response")[[1]]
 
 sim_dem_nj_2020 <- rbinom(n = 10000, size = vep_2016, prob = prob_dem_nj)
 sim_rep_nj_2020 <- rbinom(n = 10000, size = vep_2016, prob = prob_rep_nj)
 
-hist(sim_dem_nj_2020)
-hist(sim_rep_nj_2020)
-
 sim_elections <- ((sim_dem_nj_2020 - sim_rep_nj_2020)/(sim_dem_nj_2020 + sim_rep_nj_2020) * 100)
-hist(sim_elections)
+
+hist(sim_elections, xlab = "Win margin in New Jersey",
+     main = "Joe Biden's Predicted Win Margin in New Jersey \n Generated from 10,000 Simulations",
+     xlim = c(10, 15))
 
 ```
 
@@ -105,7 +73,9 @@ poll_2020_df <- read_csv("../data/poll_avg_2020.csv") %>%
   filter(modeldate == "10/10/2020") %>%
   mutate(party = case_when(
     candidate_name == "Joseph R. Biden Jr." ~ "Democrat",
-    candidate_name == "Donald Trump" ~ "Republican"))
+    candidate_name == "Donald Trump" ~ "Republican")) %>%
+  drop_na() %>%
+  select(state, party, pct_estimate)
 
 for(current_state in states) {
   rep <- poll_pvstate_vep_df %>%
@@ -117,11 +87,24 @@ for(current_state in states) {
   rep_glm <- glm(cbind(R, VEP - R) ~ avg_poll, rep, family = "binomial")
   dem_glm <- glm(cbind(D, VEP - D) ~ avg_poll, dem, family = "binomial")
   
+  rep_avg_poll <- poll_2020_df %>%
+    filter(state == current_state,
+           party == "Republican") %>%
+    select(pct_estimate) %>%
+    pull()
+
+  dem_avg_poll <- poll_2020_df %>%
+    filter(state == current_state,
+           party == "Republican") %>%
+    select(pct_estimate) %>%
+    pull()
+  
+  
   prob_rep <- predict(rep_glm, 
-                      newdata = data.frame(avg_poll = 43), 
+                      newdata = data.frame(avg_poll = rep_avg_poll), 
                       type ="response")[[1]]
   prob_dem <- predict(dem_glm,
-                      newdata = data.frame(avg_poll = 52), 
+                      newdata = data.frame(avg_poll = dem_avg_poll), 
                       type ="response")[[1]]
   
   VEP_temp <- vep %>%
@@ -139,20 +122,6 @@ for(current_state in states) {
 
 ```
 
-```{r}
-
-abbreviations <- read_csv("../data/abbrev.csv") %>%
-  mutate(state = State) %>%
-  select(Code, state)
-
-temp <- predictions_df %>%
-  left_join(abbreviations, by = "state") %>%
-  mutate(biden_win_margin = (dempred - reppred)/(dempred + reppred) * 100) %>%
-  group_by(Code) %>%
-  summarise(win_margin = mean(biden_win_margin))
-
-```
-
 
 ```{r}
 
@@ -165,12 +134,15 @@ predictions_df %>%
   mutate(biden_win_margin = (dempred - reppred)/(dempred + reppred) * 100) %>%
   ggplot(aes(x = biden_win_margin)) + 
   geom_histogram(bins = 50) +
-  scale_y_continuous(limits = c(0,900)) + 
-  scale_x_continuous(breaks = c(-10, 0, 5)) +
-  facet_geo(~ Code) +
+  scale_y_continuous(limits = c(0,900), breaks = c(0, 450, 900)) + 
+  facet_geo(~ Code, scales = "free_x") +
   xlab("Democratic Win Margin") +
-  ylab("Count") 
+  ylab("Count") +
+  labs(x = "Win Margin",
+       y = "Count",
+       title = "Joe Biden's Predicted Win Margin by State")
 
+ggsave("../figures/geofacet.jpg", height = 8, width = 17)
 ```
 
 
