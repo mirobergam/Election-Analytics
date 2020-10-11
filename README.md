@@ -7,3 +7,5 @@ This election analysis blog will updated weekly with articles analyzing U.S. pre
 ### [Poll Ratings in 2016 and 2020](posts/blog3.md)
 
 ### [A Closer Look at the Incumbency Advantage](posts/blog4.md)
+
+### [Predicting 2020 Presidential Election Win Margins](posts/blog5.md)
