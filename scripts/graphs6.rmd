@@ -1,0 +1,79 @@
+---
+title: "graphs6"
+author: "Miroslav Bergam"
+date: "10/15/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(useful)
+```
+
+```{r, message = FALSE, warning = FALSE}
+
+# Voting data
+votes <- read_csv("../data/popvote_bystate_1948-2016.csv")
+
+# State abbrevs
+abbrev <- read_csv("../data/abbrev.csv") %>%
+  mutate(state = State)
+
+# Cleaning voting data
+votes <- votes %>%
+  left_join(abbrev, by = "state") %>%
+  unite(join, c(Code, year), sep = "", remove = FALSE) %>%
+  select(join, D_pv2p)
+
+# Merging demographic and voting data
+
+demog <- read_csv("../data/demographic_1990-2018.csv") %>%
+  unite(join, c(state, year), sep = "", remove = FALSE) %>%
+  left_join(votes, by = "join") %>%
+  drop_na() %>%
+  arrange(state) 
+
+# Calculating percent change in demographic population from elxn to elxn
+# Tried to do this like 4 different easier ways but it was taking too much time
+
+demog <- shift.column(data = demog, column = "Asian", up = FALSE, len = 1)
+demog <- shift.column(data = demog, column = "Black", up = FALSE, len = 1)
+demog <- shift.column(data = demog, column = "White", up = FALSE, len = 1)
+demog <- shift.column(data = demog, column = "Indigenous", up = FALSE, len = 1)
+demog <- shift.column(data = demog, column = "Hispanic", up = FALSE, len = 1)
+demog <- shift.column(data = demog, column = "Female", up = FALSE, len = 1)
+demog <- shift.column(data = demog, column = "Male", up = FALSE, len = 1)
+demog <- shift.column(data = demog, column = "age20", up = FALSE, len = 1)
+demog <- shift.column(data = demog, column = "age3045", up = FALSE, len = 1)
+demog <- shift.column(data = demog, column = "age4565", up = FALSE, len = 1)
+demog <- shift.column(data = demog, column = "age65", up = FALSE, len = 1)
+
+# Final clean
+demog <- demog %>%
+  mutate(asian_chg = (Asian - Asian.Shifted)/Asian.Shifted * 100,
+         black_chg = (Black - Black.Shifted)/Black.Shifted * 100,
+         white_chg = (White - White.Shifted)/White.Shifted * 100,
+         indigenous_chg = (Indigenous - Indigenous.Shifted)/Indigenous.Shifted * 100,
+         hispanic_chg = (Hispanic - Hispanic.Shifted)/Hispanic.Shifted * 100,
+         female_chg = (Female - Female.Shifted)/Female.Shifted * 100,
+         male_chg = (Male - Male.Shifted)/Male.Shifted * 100,
+         age20_chg = (age20 - age20.Shifted)/age20.Shifted * 100,
+         age3045_chg = (age3045 - age3045.Shifted)/age3045.Shifted * 100,
+         age4565_chg = (age4565 - age4565.Shifted)/age4565.Shifted * 100,
+         age65_chg = (age65 - age65.Shifted)/age65.Shifted * 100) %>%
+  select(year, state, D_pv2p, asian_chg, black_chg, white_chg,
+         indigenous_chg, hispanic_chg, female_chg, male_chg,
+         age20_chg, age3045_chg, age4565_chg, age65_chg) %>%
+  filter(year != 1992)
+
+
+```
+
+```{r}
+
+
+
+```
+
+
