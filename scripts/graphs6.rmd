@@ -24,7 +24,7 @@ abbrev <- read_csv("../data/abbrev.csv") %>%
 votes <- votes %>%
   left_join(abbrev, by = "state") %>%
   unite(join, c(Code, year), sep = "", remove = FALSE) %>%
-  select(join, D_pv2p)
+  select(join, R_pv2p)
 
 # Merging demographic and voting data
 
@@ -62,17 +62,29 @@ demog <- demog %>%
          age3045_chg = (age3045 - age3045.Shifted)/age3045.Shifted * 100,
          age4565_chg = (age4565 - age4565.Shifted)/age4565.Shifted * 100,
          age65_chg = (age65 - age65.Shifted)/age65.Shifted * 100) %>%
-  select(year, state, D_pv2p, asian_chg, black_chg, white_chg,
+  select(year, state, R_pv2p, asian_chg, black_chg, white_chg,
          indigenous_chg, hispanic_chg, female_chg, male_chg,
          age20_chg, age3045_chg, age4565_chg, age65_chg) %>%
   filter(year != 1992)
 
+# Source: https://github.com/cphalpert/census-regions/blob/master/us%20census%20bureau%20regions%20and%20divisions.csv
+regions <- read_csv("../data/regions.csv") %>%
+  mutate(state = as.factor(`State Code`)) %>%
+  select(state, Region)
+
+demog <- demog %>%
+  left_join(regions, by = "state")
 
 ```
 
 ```{r}
 
+demo_model <- glm(R_pv2p ~ Region + white_chg + hispanic_chg + asian_chg + 
+                          black_chg + indigenous_chg + female_chg +
+                          male_chg + age20_chg + age3045_chg + 
+                          age4565_chg + age65_chg, data = demog)
 
+summary(demo_model)
 
 ```
 
