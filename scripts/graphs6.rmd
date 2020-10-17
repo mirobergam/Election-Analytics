@@ -24,7 +24,7 @@ abbrev <- read_csv("../data/abbrev.csv") %>%
 votes <- votes %>%
   left_join(abbrev, by = "state") %>%
   unite(join, c(Code, year), sep = "", remove = FALSE) %>%
-  select(join, R_pv2p)
+  select(join, D_pv2p, R_pv2p)
 
 # Merging demographic and voting data
 
@@ -32,25 +32,22 @@ demog <- read_csv("../data/demographic_1990-2018.csv") %>%
   unite(join, c(state, year), sep = "", remove = FALSE) %>%
   left_join(votes, by = "join") %>%
   drop_na() %>%
-  arrange(state) 
-
-# Calculating percent change in demographic population from elxn to elxn
-# Tried to do this like 4 different easier ways but it was taking too much time
-
-demog <- shift.column(data = demog, column = "Asian", up = FALSE, len = 1)
-demog <- shift.column(data = demog, column = "Black", up = FALSE, len = 1)
-demog <- shift.column(data = demog, column = "White", up = FALSE, len = 1)
-demog <- shift.column(data = demog, column = "Indigenous", up = FALSE, len = 1)
-demog <- shift.column(data = demog, column = "Hispanic", up = FALSE, len = 1)
-demog <- shift.column(data = demog, column = "Female", up = FALSE, len = 1)
-demog <- shift.column(data = demog, column = "Male", up = FALSE, len = 1)
-demog <- shift.column(data = demog, column = "age20", up = FALSE, len = 1)
-demog <- shift.column(data = demog, column = "age3045", up = FALSE, len = 1)
-demog <- shift.column(data = demog, column = "age4565", up = FALSE, len = 1)
-demog <- shift.column(data = demog, column = "age65", up = FALSE, len = 1)
+  arrange(state, year) %>%
+  mutate(Asian.Shifted = lag(Asian),
+         Black.Shifted = lag(Black),
+         White.Shifted = lag(White),
+         Indigenous.Shifted = lag(Indigenous),
+         Hispanic.Shifted = lag(Hispanic),
+         Female.Shifted = lag(Female),
+         Male.Shifted = lag(Male),
+         age20.Shifted = lag(age20),
+         age3045.Shifted = lag(age3045),
+         age4565.Shifted = lag(age4565),
+         age65.Shifted = lag(age65)) 
 
 # Final clean
 demog <- demog %>%
+  arrange(state,year) %>%
   mutate(asian_chg = (Asian - Asian.Shifted)/Asian.Shifted * 100,
          black_chg = (Black - Black.Shifted)/Black.Shifted * 100,
          white_chg = (White - White.Shifted)/White.Shifted * 100,
@@ -62,10 +59,11 @@ demog <- demog %>%
          age3045_chg = (age3045 - age3045.Shifted)/age3045.Shifted * 100,
          age4565_chg = (age4565 - age4565.Shifted)/age4565.Shifted * 100,
          age65_chg = (age65 - age65.Shifted)/age65.Shifted * 100) %>%
-  select(year, state, R_pv2p, asian_chg, black_chg, white_chg,
+  select(year, state, D_pv2p, R_pv2p, asian_chg, black_chg, white_chg,
          indigenous_chg, hispanic_chg, female_chg, male_chg,
          age20_chg, age3045_chg, age4565_chg, age65_chg) %>%
-  filter(year != 1992)
+  filter(year != 1992,
+         state != "DC")
 
 # Source: https://github.com/cphalpert/census-regions/blob/master/us%20census%20bureau%20regions%20and%20divisions.csv
 regions <- read_csv("../data/regions.csv") %>%
@@ -79,13 +77,101 @@ demog <- demog %>%
 
 ```{r}
 
-demo_model <- glm(R_pv2p ~ Region + white_chg + hispanic_chg + asian_chg + 
-                          black_chg + indigenous_chg + female_chg +
-                          male_chg + age20_chg + age3045_chg + 
-                          age4565_chg + age65_chg, data = demog)
+demo_model <- lm(R_pv2p ~ Region * white_chg + hispanic_chg + asian_chg + 
+                          black_chg + indigenous_chg, data = demog)
 
 summary(demo_model)
 
 ```
+
+```{r, warning = FALSE, message = FALSE}
+
+demog_new <- read_csv("../data/demographic_1990-2018.csv")%>%
+  filter(year == 2018 | year == 2016,
+         state != "DC") %>%
+  arrange(state, year) %>%
+  mutate(Asian.Shifted = lag(Asian),
+         Black.Shifted = lag(Black),
+         White.Shifted = lag(White),
+         Indigenous.Shifted = lag(Indigenous),
+         Hispanic.Shifted = lag(Hispanic),
+         Female.Shifted = lag(Female),
+         Male.Shifted = lag(Male),
+         age20.Shifted = lag(age20),
+         age3045.Shifted = lag(age3045),
+         age4565.Shifted = lag(age4565),
+         age65.Shifted = lag(age65)) %>%
+  mutate(asian_chg = (Asian - Asian.Shifted)/Asian.Shifted * 100,
+         black_chg = (Black - Black.Shifted)/Black.Shifted * 100,
+         white_chg = (White - White.Shifted)/White.Shifted * 100,
+         indigenous_chg = (Indigenous - Indigenous.Shifted)/Indigenous.Shifted * 100,
+         hispanic_chg = (Hispanic - Hispanic.Shifted)/Hispanic.Shifted * 100,
+         female_chg = (Female - Female.Shifted)/Female.Shifted * 100,
+         male_chg = (Male - Male.Shifted)/Male.Shifted * 100,
+         age20_chg = (age20 - age20.Shifted)/age20.Shifted * 100,
+         age3045_chg = (age3045 - age3045.Shifted)/age3045.Shifted * 100,
+         age4565_chg = (age4565 - age4565.Shifted)/age4565.Shifted * 100,
+         age65_chg = (age65 - age65.Shifted)/age65.Shifted * 100) %>%
+  filter(year == 2018) %>%
+  select(year, state, asian_chg, black_chg, white_chg,
+         indigenous_chg, hispanic_chg, female_chg, male_chg,
+         age20_chg, age3045_chg, age4565_chg, age65_chg)
+
+regions <- read_csv("../data/regions.csv") %>%
+  mutate(state = as.factor(`State Code`)) %>%
+  select(state, Region)
+
+demog_new <- demog_new %>%
+  left_join(regions, by = "state")
+
+states <- demog %>%
+  select(state) %>%
+  unique()
+
+x1 <- predict(demo_model, newdata = demog_new)
+
+first_df <- cbind(states, x1) %>%
+  mutate(winner = ifelse(x1 < 50, "Biden", "Trump"))
+
+demog_white <- demog_new %>%
+  mutate(white_chg = ifelse(Region == "South" | Region == "Midwest", (white_chg + 1.5), white_chg))
+
+x2 <- predict(demo_model, newdata = demog_white)
+
+second_df <- cbind(states, x2) %>%
+  mutate(winner = ifelse(x2 < 50, "Biden", "Trump"))
+
+```
+
+```{r}
+
+library(statebins)
+
+first_df %>% 
+  ggplot(aes(state = state, fill = fct_relevel(winner, "Trump", "Biden"))) +
+  geom_statebins() +
+  theme_statebins() +
+  labs(title = "2020 Presidential Election State-Level Predictions",
+       subtitle = "Using demographic-based model",
+       fill = "",
+       source = "") +
+  scale_fill_manual(values=c("#619CFF", "#F8766D"), breaks = c("Biden", "Trump"))
+
+ggsave("../figures/demomap1.jpg", height = 5, width = 10)
+
+second_df %>% 
+  ggplot(aes(state = state, fill = fct_relevel(winner, "Trump", "Biden"))) +
+  geom_statebins() +
+  theme_statebins() +
+  labs(title = "2020 Presidential Election State-Level Predictions",
+       subtitle = "Anticipating a 1.5% surge in turnout for Southern and Midwestern Whites",
+       fill = "",
+       source = "") +
+  scale_fill_manual(values=c("#619CFF", "#F8766D"), breaks = c("Biden", "Trump"))
+
+ggsave("../figures/demomap2.jpg", height = 5, width = 10)
+
+```
+
 
 
