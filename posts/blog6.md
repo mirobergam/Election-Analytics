@@ -13,11 +13,15 @@ On this blog, we've explored how polling data, historical voting data, economic 
 ![](../figures/demotable.png)
 Source: United States Elections Project
 
-It is very important to note that this model is not generated based on each demographic's history of voting either Democratic and Republican, but rather by how the demographic's changes in turnout has affected which candidate wins each respective state. This is why some of the values in our table are suspect: based on general knowledge of the historical party support of Black Americans, it seems unlikely that an increase in Black turnout would lead to a higher Republican voteshare in their state, even if just by a small amount of 0.18 percentage point. 
+Regarding interpretation, we can interpret the `hispanic_chg` coefficient, for example, as a -0.07% decrease in the Republican voteshare of a given state for each 1% increase in that state's Hispanic population. For regions, we can expect a 13.72% decrease in Republican voteshare if a state is in the Northeast.
+
+It is very important to note that this model is not generated based on each demographic's history of voting either Democratic and Republican, but rather by how that demographic's changes in turnout has affected which candidate wins each respective state. This may be why some of the values in our table are suspect: based on general knowledge of the historical party support of Black Americans, it seems unlikely that an increase in Black turnout would lead to a higher Republican voteshare in their state, even if just by a small amount of 0.18%.
 
 Some of these coefficients, however, make sense in context. It comports with our understanding of historical party support that an increase in Southern and White voters would lead to a greater Republican voteshare, while an increase in Hispanic and Northeastern voters would do the opposite. I decided to look at the interaction between `region` and `white_chg`, as White Voters, being such a large voting bloc, vary in their party support largely based on where they live. These coefficients make sense as well: Northeastern Whites decrease Republican support and Southern Whites increase Republican support. 
 
 I postulate that sample size is what leads to the asymmetry in the accuracy of these coefficients. Data on White Americans and vast regions of the country is plentiful. However, when you divide Black Americans, who only [compose 13%](https://www.census.gov/quickfacts/fact/table/US/PST045219) of our national population, across 50 different states, then changes in Black turnout become volatile, arbitrary, and an overall poor predictor of election outcomes. 
+
+The overall in-sample fit of this model is 0.379, which means that 37.9% of the state Republican voteshares can be explained by our regional and demographic predictors. Overall, this is a moderately good fit.
 
 ### Surge Predictions
 
