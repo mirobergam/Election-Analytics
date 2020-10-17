@@ -70,12 +70,16 @@ regions <- read_csv("../data/regions.csv") %>%
   mutate(state = as.factor(`State Code`)) %>%
   select(state, Region)
 
+# Joining data on regions
+
 demog <- demog %>%
   left_join(regions, by = "state")
 
 ```
 
 ```{r}
+
+# Creating model and table
 
 library(sjPlot)
 
@@ -92,6 +96,8 @@ png("../figures/demotable.png", height=1000, width=200)
 ```
 
 ```{r, warning = FALSE, message = FALSE}
+
+# Creating new data on demographic changes since 2018
 
 demog_new <- read_csv("../data/demographic_1990-2018.csv")%>%
   filter(year == 2018 | year == 2016,
@@ -124,12 +130,16 @@ demog_new <- read_csv("../data/demographic_1990-2018.csv")%>%
          indigenous_chg, hispanic_chg, female_chg, male_chg,
          age20_chg, age3045_chg, age4565_chg, age65_chg)
 
+# Adding regional data
+
 regions <- read_csv("../data/regions.csv") %>%
   mutate(state = as.factor(`State Code`)) %>%
   select(state, Region)
 
 demog_new <- demog_new %>%
   left_join(regions, by = "state")
+
+# Creating two tibbles for model's prediction and model's prediction based on southern+midwestern white surge 
 
 states <- demog %>%
   select(state) %>%
@@ -151,6 +161,8 @@ second_df <- cbind(states, x2) %>%
 ```
 
 ```{r}
+
+# Generating plots
 
 library(statebins)
 
