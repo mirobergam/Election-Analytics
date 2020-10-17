@@ -77,10 +77,17 @@ demog <- demog %>%
 
 ```{r}
 
+library(sjPlot)
+
 demo_model <- lm(R_pv2p ~ Region * white_chg + hispanic_chg + asian_chg + 
                           black_chg + indigenous_chg, data = demog)
 
-summary(demo_model)
+tab_model(demo_model,
+          title = "The Impact of Demographic Changes on Republican Voteshare
+                   by State \n (based on 1996-2016 presidential election data)",
+          dv.labels = "State-Level Republican Two-Party Voteshare")
+
+png("../figures/demotable.png", height=1000, width=200)
 
 ```
 

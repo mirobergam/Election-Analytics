@@ -9,3 +9,5 @@ This election analysis blog will updated weekly with articles analyzing U.S. pre
 ### [A Closer Look at the Incumbency Advantage](posts/blog4.md)
 
 ### [Predicting 2020 Presidential Election Win Margins](posts/blog5.md)
+
+### [The Impact of Demographic Changes](posts/blog6.md)
