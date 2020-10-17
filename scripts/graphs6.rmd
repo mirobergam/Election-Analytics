@@ -163,7 +163,7 @@ second_df <- cbind(states, x2) %>%
 ```{r}
 
 # Generating plots
-
+# Thanks Yao Yu for showing the class this package -- super useful!
 library(statebins)
 
 first_df %>% 
@@ -173,7 +173,7 @@ first_df %>%
   labs(title = "2020 Presidential Election State-Level Predictions",
        subtitle = "Using demographic-based model",
        fill = "",
-       source = "") +
+       caption = "Source: United States Elections Project") +
   scale_fill_manual(values=c("#619CFF", "#F8766D"), breaks = c("Biden", "Trump"))
 
 ggsave("../figures/demomap1.jpg", height = 5, width = 10)
@@ -185,7 +185,7 @@ second_df %>%
   labs(title = "2020 Presidential Election State-Level Predictions",
        subtitle = "Anticipating a 1.5% surge in turnout for Southern and Midwestern Whites",
        fill = "",
-       source = "") +
+       caption = "Source: United States Elections Project") +
   scale_fill_manual(values=c("#619CFF", "#F8766D"), breaks = c("Biden", "Trump"))
 
 ggsave("../figures/demomap2.jpg", height = 5, width = 10)

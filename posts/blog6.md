@@ -11,6 +11,7 @@ On this blog, we've explored how polling data, historical voting data, economic 
 ### A Demographic-Based Model
 
 ![](../figures/demotable.png)
+Source: United States Elections Project
 
 It is very important to note that this model is not generated based on each demographic's history of voting either Democratic and Republican, but rather by how the demographic's changes in turnout has affected which candidate wins each respective state. This is why some of the values in our table are suspect: based on general knowledge of the historical party support of Black Americans, it seems unlikely that an increase in Black turnout would lead to a higher Republican voteshare in their state, even if just by a small amount of 0.18 percentage point. 
 
