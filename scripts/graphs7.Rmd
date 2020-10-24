@@ -1,0 +1,20 @@
+---
+title: "Graphs7"
+author: "Miroslav Bergam"
+date: "10/20/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+```{r}
+
+covid <- read_csv("../data/racialcoviddata.csv") %>%
+  filter(Date == "20201018") %>%
+  arrange(desc("Cases_Total"))
+
+```
+

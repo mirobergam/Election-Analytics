@@ -1,0 +1,107 @@
+---
+title: "graphs8"
+author: "Miroslav Bergam"
+date: "10/23/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+```
+
+```{r, warning = FALSE, message = FALSE}
+
+county <- read_csv("../data/popvote_bycounty_2000-2016.csv")
+
+covid <- read_csv("../data/COVID_county.csv") 
+
+demo <- read_csv("../data/demog_county_1990-2018.csv")
+
+polls <- read_csv("../data/poll_avg_2020.csv")
+
+data <- county %>%
+  left_join(covid, by = "fips") %>%
+  drop_na()
+
+opinion <- read_csv("../data/Covid_opinion.csv")
+
+# https://ropercenter.cornell.edu/supporting-public-opinion-data-related-covid-19?utm_source=Data+Dive+from+Roper%40Cornell+6.28.18&utm_campaign=28df841335-EMAIL_CAMPAIGN_2019_10_08_04_38_COPY_02&utm_medium=email&utm_term=0_b24149c0c3-28df841335-&utm_source=Data+Dive+from+Roper%40Cornell+6.28.18&utm_campaign=28df841335-EMAIL_CAMPAIGN_2019_10_08_04_38_COPY_02&utm_medium=email&utm_term=0_b24149c0c3-28df841335-580634065
+# First two: Trump's handling of covid response
+# Third: Trust in Trump's covid statements
+# Fourth: Trust in Biden's covid statements
+# Fifth: who respects military more
+
+```
+
+
+```{r, warning = FALSE, message = FALSE}
+
+abbrev <- read_csv("../data/abbrev.csv") %>%
+  mutate(state = State)
+
+last_elxn <- read_csv("../data/popvote_bystate_1948-2016.csv") %>%
+  filter(year == 2016) %>%
+  left_join(abbrev, by = "state") %>%
+  mutate(state = Code) %>%
+  mutate(rep_2016 = R_pv2p) %>%
+  select(rep_2016, state)
+
+state_covid <- read_csv("../data/Covid_state.csv") %>%
+  mutate(date = as.Date(submission_date, "%m/%d/%y")) %>%
+  select(state, date, new_case, new_death, tot_cases) %>%
+  unite(join, c(state, date), sep = " ", remove = FALSE) %>%
+  drop_na()
+
+polls <- read_csv("../data/poll_avg_2020.csv") %>%
+  filter(candidate_name == "Donald Trump") %>%
+  left_join(abbrev, by = "state") %>%
+  mutate(state = Code) %>%
+  left_join(last_elxn, by = "state") %>%
+  mutate(date = as.Date(modeldate, "%m/%d/%y")) %>%
+  select(cycle, state, date, pct_estimate, rep_2016) %>%
+  unite(join, c(state, date), sep = " ", remove = FALSE) %>%
+  left_join(state_covid, by = "join") %>%
+  mutate(state = state.x,
+         date = date.x) %>%
+  select(state, date, pct_estimate, rep_2016, new_case, new_death, tot_cases)
+
+
+```
+
+```{r}
+
+model <- lm(pct_estimate ~ rep_2016 + new_case + tot_cases + new_death, data = polls)
+
+summary(model)
+
+```
+
+```{r}
+
+prob_rep <- predict(rep_glm, 
+                      newdata = data.frame(avg_poll = rep_avg_poll), 
+                      type ="response")[[1]]
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
