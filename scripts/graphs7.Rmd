@@ -1,20 +1,217 @@
 ---
-title: "Graphs7"
+title: "graphs7"
 author: "Miroslav Bergam"
-date: "10/20/2020"
+date: "10/23/2020"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
 library(tidyverse)
+library(readxl)
+library(gt)
+
+```
+
+```{r, warning = FALSE, message = FALSE}
+
+county <- read_csv("../data/popvote_bycounty_2000-2016.csv")
+
+covid <- read_csv("../data/COVID_county.csv") 
+
+demo <- read_csv("../data/demog_county_1990-2018.csv")
+
+polls <- read_csv("../data/poll_avg_2020.csv")
+
+data <- county %>%
+  left_join(covid, by = "fips") %>%
+  drop_na()
+
+opinion <- read_csv("../data/Covid_opinion.csv")
+
+# https://ropercenter.cornell.edu/supporting-public-opinion-data-related-covid-19?utm_source=Data+Dive+from+Roper%40Cornell+6.28.18&utm_campaign=28df841335-EMAIL_CAMPAIGN_2019_10_08_04_38_COPY_02&utm_medium=email&utm_term=0_b24149c0c3-28df841335-&utm_source=Data+Dive+from+Roper%40Cornell+6.28.18&utm_campaign=28df841335-EMAIL_CAMPAIGN_2019_10_08_04_38_COPY_02&utm_medium=email&utm_term=0_b24149c0c3-28df841335-580634065
+# First two: Trump's handling of covid response
+# Third: Trust in Trump's covid statements
+# Fourth: Trust in Biden's covid statements
+# Fifth: who respects military more
+
+```
+
+
+```{r, warning = FALSE, message = FALSE}
+
+abbrev <- read_csv("../data/abbrev.csv") %>%
+  mutate(state = State)
+
+last_elxn <- read_csv("../data/popvote_bystate_1948-2016.csv") %>%
+  filter(year == 2016) %>%
+  left_join(abbrev, by = "state") %>%
+  mutate(state = Code) %>%
+  mutate(rep_2016 = R_pv2p) %>%
+  select(rep_2016, state)
+
+state_covid <- read_csv("../data/Covid_state.csv") %>%
+  mutate(date = as.Date(submission_date, "%m/%d/%y")) %>%
+  select(state, date, new_case, new_death, tot_cases) %>%
+  unite(join, c(state, date), sep = " ", remove = FALSE) %>%
+  drop_na()
+
+statepops <- read_xlsx("../data/state_population.xlsx") %>%
+  select(state, total)
+
+polls <- read_csv("../data/poll_avg_2020.csv") %>%
+  filter(candidate_name == "Donald Trump") %>%
+  left_join(abbrev, by = "state") %>%
+  mutate(state = Code) %>%
+  left_join(last_elxn, by = "state") %>%
+  mutate(date = as.Date(modeldate, "%m/%d/%y")) %>%
+  select(cycle, state, date, pct_estimate, rep_2016) %>%
+  unite(join, c(state, date), sep = " ", remove = FALSE) %>%
+  left_join(state_covid, by = "join") %>%
+  mutate(state = state.x,
+         date = date.x) %>%
+  select(state, date, pct_estimate, rep_2016, new_case, new_death, tot_cases)
+
+# Adding in total population and calculating percent sick
+polls <- polls %>%
+  left_join(statepops, by = "state") %>%
+  mutate(pct_sick = tot_cases/total)
+
+
 ```
 
 ```{r}
 
-covid <- read_csv("../data/racialcoviddata.csv") %>%
-  filter(Date == "20201018") %>%
-  arrange(desc("Cases_Total"))
+# Calculating the change in poll estimate for trump day by day
+
+polls <- polls %>%
+  arrange(state, date) %>%
+  mutate(estimate = lag(pct_estimate)) %>%
+  mutate(change_estimate = estimate - pct_estimate) %>%
+  group_by(state) %>%
+  slice(2:n()) %>%
+  select(-estimate) %>%
+  #mutate(tot_cases_t = tot_cases / 100) %>%
+  mutate(pct_sick_transform = pct_sick * 100)
 
 ```
+
+
+```{r}
+
+library(sjPlot)
+
+model1 <- lm(pct_estimate ~ rep_2016 + pct_sick * state, data = polls)
+
+#model2 <- lm(pct_estimate ~ rep_2016 + tot_cases, data = polls)
+
+model3 <- lm(pct_estimate ~ rep_2016 + pct_sick_transform, data = polls)
+
+#model4 <- lm(pct_estimate ~ rep_2016 + tot_cases_t, data = polls)
+
+summary(model3)
+
+tab_model(model3,
+          title = "The Impact of COVID Cases on Trump's Voteshare by State",
+          dv.labels = "Trump's Projected State Voteshare")
+
+png("../figures/covidtable.png", height=1000, width=200)
+
+
+```
+
+```{r, warning = FALSE, message = FALSE}
+
+library(ggplot2)
+library(cowplot)
+
+graph1 <- polls %>% 
+  filter(state == "NY" | state == "MA"| state == "ME"| state == "NM" | 
+         state == "MN") %>%
+  ggplot(aes(x = pct_sick, y = pct_estimate, color = state)) +
+  #geom_point() +
+  geom_smooth(aes(group=state)) +
+  labs(title = "Trump's Polling in Most Negatively \nCorrelated States By Total COVID Cases",
+       x = "COVID-Positive % of State Pop.",
+       y = "Trump's Daily Polling Average",
+       color = "State")
+
+
+graph2 <- polls %>% 
+  filter(state == "OH" | state == "PA"| state == "NC"| #state == "FL" | 
+         state == "GA" | state == "WI" | state == "MI") %>%
+  ggplot(aes(x = pct_sick, y = pct_estimate, color = state)) +
+  #geom_point() +
+  geom_smooth(aes(group=state)) + 
+  #geom_line(aes(color=state))
+  labs(title = "Trump's Polling in Swing States \n By Total COVID Cases",
+       x = "COVID-Positive % of State Pop.",
+       y = "Trump's Daily Polling Average",
+       color = "State")
+
+plot_grid(graph1, graph2)
+
+polls %>% 
+  ggplot(aes(x = pct_sick, y = pct_estimate, color = state)) +
+  #geom_point()+ 
+  geom_smooth(aes(group=state)) +
+  theme(legend.position = "none") + 
+  labs(title = "Trump's Daily Polling in all 50 States \n By Total COVID Cases",
+       x = "COVID-Positive % of State Pop.",
+       y = "Trump's Daily Polling Average")
+
+
+
+#ggsave("../figures/covidplots.jpg", height = 4, width = 8)
+
+```
+
+
+```{r, warning = FALSE, message = FALSE}
+
+newdata <- read_csv("../data/all-states-history.csv") %>%
+  filter(date == "2020-10-24") %>%
+  left_join(statepops, by = "state") %>%
+  mutate(pct_sick = positive/total) %>%
+  left_join(last_elxn, by = "state") %>%
+  select(state, pct_sick, rep_2016) %>%
+  drop_na() 
+
+predictions <- predict(model2, 
+                      newdata = newdata,
+                      type ="response")
+
+states <- statepops %>%
+  select(state) %>%
+  unique()
+
+prediction_df <- cbind(predictions, states) %>%
+  mutate(winner = ifelse(predictions < 50, "Biden", "Trump"))
+
+library(statebins)
+
+prediction_df %>% 
+  ggplot(aes(state = state, fill = fct_relevel(winner, "Trump", "Biden"))) +
+  geom_statebins() +
+  theme_statebins() +
+  labs(title = "2020 Presidential Election State-Level Predictions",
+       subtitle = "Using demographic-based model",
+       fill = "",
+       caption = "Source: United States Elections Project") +
+  scale_fill_manual(values=c("#619CFF", "#F8766D"), breaks = c("Biden", "Trump"))
+
+#ggsave("../figures/demomap1.jpg", height = 5, width = 10)
+
+```
+
+```{r}
+summary(model1)
+```
+
+
+
+
+
+
 
