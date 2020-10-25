@@ -133,24 +133,30 @@ graph1 <- polls %>%
   #geom_point() +
   geom_smooth(aes(group=state)) +
   labs(title = "Trump's Polling in Most Negatively \nCorrelated States By Total COVID Cases",
+       subtitle = "Data as of October 10th, 2020",
        x = "COVID-Positive % of State Pop.",
        y = "Trump's Daily Polling Average",
-       color = "State")
+       color = "State",
+       caption = "Sources: The COVID Tracking Project, \nCDC, The New York Times")
 
 
 graph2 <- polls %>% 
-  filter(state == "OH" | state == "PA"| state == "NC"| #state == "FL" | 
+  filter(state == "OH" | state == "PA"| state == "NC"| state == "FL" | 
          state == "GA" | state == "WI" | state == "MI") %>%
   ggplot(aes(x = pct_sick, y = pct_estimate, color = state)) +
   #geom_point() +
   geom_smooth(aes(group=state)) + 
   #geom_line(aes(color=state))
   labs(title = "Trump's Polling in Swing States \n By Total COVID Cases",
+       subtitle = "Data as of October 10th, 2020",
        x = "COVID-Positive % of State Pop.",
        y = "Trump's Daily Polling Average",
-       color = "State")
+       color = "State",
+       caption = "Sources: The COVID Tracking Project, \nCDC, The New York Times")
 
 plot_grid(graph1, graph2)
+
+ggsave("../figures/covidplots.jpg", height = 6, width = 12)
 
 polls %>% 
   ggplot(aes(x = pct_sick, y = pct_estimate, color = state)) +
@@ -158,17 +164,22 @@ polls %>%
   geom_smooth(aes(group=state)) +
   theme(legend.position = "none") + 
   labs(title = "Trump's Daily Polling in all 50 States \n By Total COVID Cases",
+       subtitle = "Data as of October 10th, 2020",
        x = "COVID-Positive % of State Pop.",
-       y = "Trump's Daily Polling Average")
+       y = "Trump's Daily Polling Average",
+       caption = "Sources: CDC, The COVID Tracking Project, The New York Times") +
+  ylim(25, 70)
 
 
 
-#ggsave("../figures/covidplots.jpg", height = 4, width = 8)
+ggsave("../figures/covidplot50.jpg", height = 6, width = 6)
 
 ```
 
 
 ```{r, warning = FALSE, message = FALSE}
+
+# Predicting covid population totals using the most recent COVID numbers
 
 newdata <- read_csv("../data/all-states-history.csv") %>%
   filter(date == "2020-10-24") %>%
@@ -176,9 +187,10 @@ newdata <- read_csv("../data/all-states-history.csv") %>%
   mutate(pct_sick = positive/total) %>%
   left_join(last_elxn, by = "state") %>%
   select(state, pct_sick, rep_2016) %>%
+  mutate(pct_sick_transform = pct_sick * 100) %>%
   drop_na() 
 
-predictions <- predict(model2, 
+predictions <- predict(model3, 
                       newdata = newdata,
                       type ="response")
 
@@ -191,22 +203,20 @@ prediction_df <- cbind(predictions, states) %>%
 
 library(statebins)
 
+# Plotting the predicted winner of each state from model's predictions
+
 prediction_df %>% 
   ggplot(aes(state = state, fill = fct_relevel(winner, "Trump", "Biden"))) +
   geom_statebins() +
   theme_statebins() +
   labs(title = "2020 Presidential Election State-Level Predictions",
-       subtitle = "Using demographic-based model",
+       subtitle = "Using coronavirus-impact model",
        fill = "",
-       caption = "Source: United States Elections Project") +
+       caption = "Sources: CDC, The Covid Tracking Project, The New York Times") +
   scale_fill_manual(values=c("#619CFF", "#F8766D"), breaks = c("Biden", "Trump"))
 
-#ggsave("../figures/demomap1.jpg", height = 5, width = 10)
+ggsave("../figures/covidmap.jpg", height = 7, width = 10)
 
-```
-
-```{r}
-summary(model1)
 ```
 
 
