@@ -142,7 +142,7 @@ graph1 <- polls %>%
 
 graph2 <- polls %>% 
   filter(state == "OH" | state == "PA"| state == "NC"| state == "FL" | 
-         state == "GA" | state == "WI" | state == "MI") %>%
+         state == "GA" | state == "WI" | state == "MI"| state == "TX") %>%
   ggplot(aes(x = pct_sick, y = pct_estimate, color = state)) +
   #geom_point() +
   geom_smooth(aes(group=state)) + 
