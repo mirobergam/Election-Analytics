@@ -20,7 +20,7 @@ library(gt)
 
 ```{r data cleaning, warning = FALSE, message = FALSE}
 
-# Reading in data
+# Reading in data 
 
 poll_2016 <- read_csv("../data/polls_2016.csv") %>%
   select(pollster, adjpoll_clinton, adjpoll_trump, poll_wt) %>%

@@ -4,7 +4,9 @@ _By Miroslav Bergam_
 
 _October 24, 2020_
 
-Shocks in an election cycle can be defined as major events that catch widespread attention and can impact how a noticeable proportion of individuals will vote. Shocks can range from a scandal, such as the release of President Trump's conversation with Billy Bush or James Comey's report on Hillary Clinton, to major events largely out of the control of the President, like foreign threats or natural disasters. 
+Shocks in an election cycle can be defined as major events that catch widespread attention and can impact how a noticeable proportion of individuals will vote. Shocks can range from a scandal, such as the release of President Trump's conversation with Billy Bush or James Comey's report on Hillary Clinton, to major events largely out of the control of the President, like foreign threats or natural disasters. Shocks can damage the credibility or likability of candidate, or can be used to ascribe blame to the incumbent candidate for the poor handling of a negative shock. 
+
+No event has more fundamentally changed the lives of citizens in this election cycle than the COVID-19 pandemic. In this blog, we'll explore the effect that the pandemic has had as a shock in this presidential election. 
 
 ![](../figures/covidtable.png)
 
@@ -32,7 +34,4 @@ The plot on the right depicts the relationship for some of the swing states in t
 
 By feeding the most recent COVID totals by state into the model we've constructed using Trump's 2016 voteshares and the impact of COVID on Trump's daily polling, we can generate this prediction for who will win each 
 
-The difficulty of measuring shocks is isolating their effect. Trump's handling of COVID and the virus' impact on citizens certainly played a role in his mild loss of support over the course of the last several months. However, in such a dramatic campaign cycle where any number of events can be labelled as shocks - from opening of a seat on the Supreme Court to the leak of Trump's tax information - it's difficult to say if COVID was the main driver.
-
-
-
+The difficulty of measuring shocks is isolating their effect. Trump's handling of COVID and the virus' impact on citizens certainly played a role in his mild loss of support over the course of the last several months. However, in such a dramatic campaign cycle where any number of events can be labeled as shocks - from opening of a seat on the Supreme Court to the leak of Trump's tax information - it's difficult to say if COVID was the main driver.
