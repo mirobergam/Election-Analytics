@@ -132,7 +132,7 @@ graph1 <- polls %>%
   ggplot(aes(x = pct_sick, y = pct_estimate, color = state)) +
   #geom_point() +
   geom_smooth(aes(group=state)) +
-  labs(title = "Trump's Polling in Most Negatively \nCorrelated States By Total COVID Cases",
+  labs(title = "Trump's Polling in Most Negatively \nCorrelated States By COVID Cases",
        subtitle = "Data as of October 10th, 2020",
        x = "COVID-Positive % of State Pop.",
        y = "Trump's Daily Polling Average",
@@ -147,7 +147,7 @@ graph2 <- polls %>%
   #geom_point() +
   geom_smooth(aes(group=state)) + 
   #geom_line(aes(color=state))
-  labs(title = "Trump's Polling in Swing States \n By Total COVID Cases",
+  labs(title = "Trump's Polling in Swing States \n By COVID Cases",
        subtitle = "Data as of October 10th, 2020",
        x = "COVID-Positive % of State Pop.",
        y = "Trump's Daily Polling Average",
@@ -163,7 +163,7 @@ polls %>%
   #geom_point()+ 
   geom_smooth(aes(group=state)) +
   theme(legend.position = "none") + 
-  labs(title = "Trump's Daily Polling in all 50 States \n By Total COVID Cases",
+  labs(title = "Trump's Daily Polling in all 50 States By COVID Cases",
        subtitle = "Data as of October 10th, 2020",
        x = "COVID-Positive % of State Pop.",
        y = "Trump's Daily Polling Average",
