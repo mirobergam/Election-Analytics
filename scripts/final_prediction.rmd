@@ -216,6 +216,8 @@ finaltable <- predictions_table %>%
 
 gtsave(finaltable, "../figures/finaltable.html")
 
+finaltable
+
 ```
 
 
