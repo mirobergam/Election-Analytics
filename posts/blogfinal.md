@@ -32,7 +32,7 @@ Based on this map, the states that still may swing in the direction of either ca
 
 ![](../figures/finalelectoral.jpg)
 
-Although these swing states may go in either direction, I predict, based on my model, that Biden will win Florida, Pennsylvania, Nevada, and Arizona, and Trump will win Georgia and North Carolina. This would ultimately result in Biden winning the election, with 324 electoral votes to Trump's 236. 
+Although these swing states may go in either direction, I predict, based on my model, that Biden will win Florida, Pennsylvania, Nevada, and Arizona, and Trump will win Georgia and North Carolina. This would ultimately result in Biden winning the election, with Biden winning 57.8% of electoral votes. 
 
 ### Uncertainty
 
