@@ -210,6 +210,9 @@ predictions_table <- cbind(predictions_table, states) %>%
   left_join(abbrev, by = "state")
 
 finaltable <- predictions_table %>% 
+  mutate(margin = round(margin, 2)) %>%
+  mutate(`lower bound` = round(`lower bound`, 2)) %>%
+  mutate(`upper bound` = round(`upper bound`, 2)) %>%
   select(state, margin, `lower bound`, `upper bound`) %>%
   gt() %>%
   tab_header(title = md("**Trump's Predicted Win and Loss Margins by State**"))
@@ -220,6 +223,14 @@ finaltable
 
 ```
 
+```{r}
+prediction_df %>%
+  group_by(group) %>%
+  summarise(ev = sum(electors))
+
+prediction_df %>%
+  filter(group == "Toss-Up")
+```
 
 
 
