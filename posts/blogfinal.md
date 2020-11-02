@@ -20,19 +20,19 @@ Overall, our model has a moderately strong in-sample fit, with a R-squared of 0.
 
 Incumbent candidates, like President Trump, experience a boost of 2.38 percentage points on average; however, being a member of the incumbent party leads to a loss of 8.89 percentage points on average. This comports with the [earlier findings](posts/blog4.md) on this blog that incumbency comes with both advantages and disadvantages. While being a direct incumbent can boost support for a candidate because of familiarity, a media advantage, and the ability to begin fundraising earlier, members of an incumbent party can also experience a loss of support as voters react to the performance of whoever was previously in office.
 
-Additionally, it finds that each additional point in a candidate's pre-election polling average in a given state leads to a 0.41% increase in their voteshare for that state on average. Each point that a candidate's party won in a given state in the previous presidential election results in a 0.71% increase in their voteshare for that state on average. Finally, each additional 1% of the population that approves of the president prior to the election results in a small boost of 0.2% in their voteshare.
+Furthermore, it finds that each additional point in a candidate's pre-election polling average in a given state leads to a 0.41% increase in their voteshare for that state on average. Each point that a candidate's party won in a given state in the previous presidential election results in a 0.71% increase in their voteshare for that state on average. Finally, each additional 1% of the population that approves of the president prior to the election results in a small boost of 0.2% in their voteshare.
 
 ### Predictions
 
-By feeding our model Trump's most recent approval ratings, his polling averages since the first presidential debate, and the state-level outcomes of the 2016 election, I predict this will be the electoral map for the 2020 election:
+By feeding our model Trump's most recent approval ratings, he and Biden's polling averages since the first presidential debate, and the state-level outcomes of the 2016 election, I predict this will be the electoral map for the 2020 election:
 
 ![](../figures/finalpredmap.jpg)
 
-Based on this map, the states that still may swing in the direction of either candidate are Florida, Georgia, North Carolina, Pennsylvania, Nevada, and Arizona. The outcomes of these states are very important in determining the outcome of the election. With 258 electoral votes certain or very likely to go towards Biden, he is just 12 votes short of winning the presidency. Trump, with 207 electoral votes likely secured, will have to win the majority of these states, particularly Florida and Pennsylvania, to turn the election in his favor. 
+Based on this map, the states that still may swing in the direction of either candidate are Florida, Georgia, North Carolina, Pennsylvania, Nevada, and Arizona. These states are very important in determining the outcome of the election. With 258 electoral votes certain or very likely to go towards Biden, he is just 12 votes short of winning the presidency. Trump, with 207 electoral votes likely secured, will have to win the majority of these states, particularly Florida and Pennsylvania, to turn the election in his favor. 
 
 ![](../figures/finalelectoral.jpg)
 
-Although these swing states may go in either direction, I predict, based on my model, that Biden will win Florida, Pennsylvania, Nevada, and Arizona, and Trump will win Georgia and North Carolina. This would ultimately result in Biden winning the election, with Biden winning 57.8% of electoral votes. 
+Although these swing states may go in either direction, I predict, based on my model, that Biden will win Florida, Pennsylvania, Nevada, and Arizona, and Trump will win Georgia and North Carolina. This would ultimately result in Biden winning the election, garnering 57.8% of electoral votes. 
 
 ### Uncertainty
 
