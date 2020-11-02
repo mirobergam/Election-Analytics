@@ -171,7 +171,7 @@ prediction_df %>%
   scale_fill_manual(values = c("#619CFF", "#C3D7F7", "#BABABA", "#FACECA", "#F8766D"),
                     breaks = c("Biden", "Likely Biden", "Toss-Up", "Likely Trump", "Trump"))
 
-ggsave("../figures/finalpredmap.jpg", height = 4, width = 6)
+ggsave("../figures/finalpredmap.jpg", height = 6, width = 10)
 
  prediction_df %>%
   group_by(group) %>%
@@ -185,7 +185,7 @@ ggsave("../figures/finalpredmap.jpg", height = 4, width = 6)
   scale_fill_manual(values = c("#619CFF", "#C3D7F7", "#BABABA", "#FACECA", "#F8766D"),
                     breaks = c("Biden", "Likely Biden", "Toss-Up", "Likely Trump", "Trump"))
   
-ggsave("../figures/finalelectoral.jpg", height = 4, width = 6)
+ggsave("../figures/finalelectoral.jpg", height = 2, width = 8)
   
 ```
 

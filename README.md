@@ -13,3 +13,5 @@ This election analysis blog will updated weekly with articles analyzing U.S. pre
 ### [The Impact of Demographic Changes](posts/blog6.md)
 
 ### [COVID's Impact on the 2020 Election](posts/blog7.md)
+
+### [Final 2020 Presidential Election Prediction](posts/blog8.md)
