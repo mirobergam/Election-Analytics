@@ -48,15 +48,31 @@ incumbency_historical <- read_csv("../data/popvote_1948-2016.csv") %>%
   select(year, party, winner, incumbent, incumbent_party) %>%
   drop_na()
 
+approval <- read_csv("../data/approval_1941-2020.csv") %>%
+  group_by(president) %>%
+  arrange(desc(poll_enddate)) %>%
+  filter(row_number() %in% c(1,2,3,4,5)) %>%
+  ungroup() %>%
+  group_by(year) %>%
+  summarize(approval = mean(approve)) %>%
+  filter(year != 2020)
+
 final <- polls_historical %>%
   left_join(elections_historical, by = c("party", "state", "year")) %>%
   left_join(incumbency_historical, by = c("year", "party")) %>%
+  left_join(approval, by = "year") %>%
   drop_na()
 
 
-model = lm(pv2p ~ incumbent + incumbent_party * party + average_poll + last_election, data = final)
+model = lm(pv2p ~ incumbent + incumbent_party * party + average_poll + last_election + approval, data = final)
 
 summary(model)
+
+tab_model(model,
+          title = "Modeling Presidential Voteshare by State",
+          dv.labels = "Candidate's Projected State Voteshare")
+
+png("../figures/summarytable.png", height=1000, width=200)
 
 ```
 
@@ -83,6 +99,17 @@ elections_new <- elections_historical %>%
   mutate(last_election = pv2p) %>%
   select(state, party, last_election)
 
+approval_new <- read_csv("../data/approval_1941-2020.csv") %>%
+  group_by(president) %>%
+  arrange(desc(poll_enddate)) %>%
+  filter(row_number() %in% c(1,2,3,4,5)) %>%
+  ungroup() %>%
+  group_by(year) %>%
+  summarize(approval = mean(approve)) %>%
+  filter(year == 2020) %>%
+  select(approval) %>%
+  pull()
+
 data_new <- polls_new %>% 
   left_join(elections_new, by = c("state", "party")) %>% 
   mutate(incumbent = case_when(
@@ -90,6 +117,7 @@ data_new <- polls_new %>%
            party == "D" ~ FALSE
          )) %>%
   mutate(incumbent_party = incumbent) %>%
+  mutate(approval = approval_new) %>%
   drop_na() %>%
   filter(party == "R")
 
@@ -138,11 +166,12 @@ prediction_df %>%
   geom_statebins() +
   theme_statebins() +
   labs(title = "2020 Presidential Election State-Level Predictions",
-       subtitle = "",
        fill = "",
-       caption = "Sources: CDC, The Covid Tracking Project, The New York Times") +
+       caption = "Sources: The New York Times, Gallup, Five-Thirty-Eight") +
   scale_fill_manual(values = c("#619CFF", "#C3D7F7", "#BABABA", "#FACECA", "#F8766D"),
                     breaks = c("Biden", "Likely Biden", "Toss-Up", "Likely Trump", "Trump"))
+
+ggsave("../figures/finalpredmap.jpg", height = 4, width = 6)
 
  prediction_df %>%
   group_by(group) %>%
@@ -156,13 +185,38 @@ prediction_df %>%
   scale_fill_manual(values = c("#619CFF", "#C3D7F7", "#BABABA", "#FACECA", "#F8766D"),
                     breaks = c("Biden", "Likely Biden", "Toss-Up", "Likely Trump", "Trump"))
   
-  
+ggsave("../figures/finalelectoral.jpg", height = 4, width = 6)
   
 ```
 
 
 
+```{r}
 
+library(gt)
+
+predictions_table <- predict(model, 
+                      newdata = data_new,
+                      type ="response",
+                      interval = "confidence") 
+
+predictions_table <- as.data.frame(predictions_table)
+
+predictions_table <- cbind(predictions_table, states) %>%
+  mutate(winner = ifelse(predictions < 50, "Biden", "Trump")) %>%
+  mutate(margin = fit - 50) %>%
+  mutate(`lower bound` = lwr - 50) %>%
+  mutate(`upper bound` = upr - 50) %>%
+  left_join(abbrev, by = "state")
+
+finaltable <- predictions_table %>% 
+  select(state, margin, `lower bound`, `upper bound`) %>%
+  gt() %>%
+  tab_header(title = md("**Trump's Predicted Win and Loss Margins by State**"))
+
+gtsave(finaltable, "../figures/finaltable.html", height = 10, width = 10)
+
+```
 
 
 
