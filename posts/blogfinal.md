@@ -38,4 +38,7 @@ Although these swing states may go in either direction, I predict, based on my m
 
 I generated confidence intervals along with my point-estimate predictions on the voteshare for each state in the coming election. You can explore the table below to see the uncertainty surrounding Trump's win and loss margins by state. 
 
-![](../figures/finaltable.html)
+
+![](../figures/statepreds.jpg)
+
+![](../figures/statepreds2.jpg)
