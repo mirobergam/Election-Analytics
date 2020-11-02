@@ -12,7 +12,7 @@ The predictors I've decided to use in my final model are whether or not a candid
 
 `pv2p ~ incumbent + incumbent_party + average_poll + last_election + approval`
 
-I found that these predictors were the most informative in generating a reasonable prediction for the 2020 election. Two predictors I worked with but ended up excluding were economic data and COVID-19 data. I found that the issues of the virus and the economy were better covered by measures like approval rating and polling average, which captures voters' feelings on how President Trump has dealt with the pandemic and its dramatic effects on the economy. I included the state-level outcome of the previous election because one's most recent voting history is a fairly reliable way of predicting how one will vote in the future. Finally, I included whether or not the candidate is an incumbent or a member of the incumbent party because Trump himself is an incumbent candidate.
+I found that these predictors were the most informative in generating a reasonable prediction for the 2020 election. Two predictors I worked with but ended up excluding were economic data and COVID-19 data. I found that the issues of the virus and the economy were better covered by measures like approval rating and polling average, which captures voters' feelings on how President Trump has dealt with the pandemic and its dramatic effects on the economy. I included the state-level outcome of the previous election because one's most recent voting history is a fairly reliable way of predicting how one will vote in the future. Finally, I included whether or not the candidate is an incumbent or a member of the incumbent party because Trump himself is running for re-election.
 
 ![](../figures/summarytable.png)
 
