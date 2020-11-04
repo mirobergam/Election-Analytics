@@ -1,5 +1,5 @@
 state,electors,year
-Alabama,11,2020
+Alabama,9,2020
 Alabama,11,2016
 Alabama,11,2012
 Alabama,10,2008
@@ -33,7 +33,7 @@ Alaska,3,1968
 Alaska,3,1964
 Alaska,3,1956
 Alaska,3,1952
-Arizona,4,2020
+Arizona,11,2020
 Arizona,4,2016
 Arizona,4,2012
 Arizona,5,2008
@@ -50,7 +50,7 @@ Arizona,10,1968
 Arizona,10,1964
 Arizona,11,1956
 Arizona,11,1952
-Arkansas,8,2020
+Arkansas,6,2020
 Arkansas,8,2016
 Arkansas,8,2012
 Arkansas,6,2008
@@ -67,7 +67,7 @@ Arkansas,6,1968
 Arkansas,6,1964
 Arkansas,6,1956
 Arkansas,6,1952
-California,32,2020
+California,55,2020
 California,32,2016
 California,32,2012
 California,40,2008
@@ -84,7 +84,7 @@ California,55,1968
 California,55,1964
 California,55,1956
 California,55,1952
-Colorado,6,2020
+Colorado,9,2020
 Colorado,6,2016
 Colorado,6,2012
 Colorado,6,2008
@@ -101,7 +101,7 @@ Colorado,9,1968
 Colorado,9,1964
 Colorado,9,1956
 Colorado,9,1952
-Connecticut,8,2020
+Connecticut,7,2020
 Connecticut,8,2016
 Connecticut,8,2012
 Connecticut,8,2008
@@ -118,7 +118,7 @@ Connecticut,7,1968
 Connecticut,7,1964
 Connecticut,7,1956
 Connecticut,7,1952
-D.C.,,2020
+D.C.,3,2020
 D.C.,,2016
 D.C.,,2012
 D.C.,3,2008
@@ -152,7 +152,7 @@ Delaware,3,1968
 Delaware,3,1964
 Delaware,3,1956
 Delaware,3,1952
-Florida,10,2020
+Florida,29,2020
 Florida,10,2016
 Florida,10,2012
 Florida,14,2008
@@ -169,7 +169,7 @@ Florida,27,1968
 Florida,27,1964
 Florida,29,1956
 Florida,29,1952
-Georgia,12,2020
+Georgia,16,2020
 Georgia,12,2016
 Georgia,12,2012
 Georgia,12,2008
@@ -186,7 +186,7 @@ Georgia,15,1968
 Georgia,15,1964
 Georgia,16,1956
 Georgia,16,1952
-Hawaii,3,2020
+Hawaii,4,2020
 Hawaii,3,2016
 Hawaii,3,2012
 Hawaii,4,2008
@@ -220,7 +220,7 @@ Idaho,4,1968
 Idaho,4,1964
 Idaho,4,1956
 Idaho,4,1952
-Illinois,27,2020
+Illinois,20,2020
 Illinois,27,2016
 Illinois,27,2012
 Illinois,26,2008
@@ -237,7 +237,7 @@ Illinois,21,1968
 Illinois,21,1964
 Illinois,20,1956
 Illinois,20,1952
-Indiana,13,2020
+Indiana,11,2020
 Indiana,13,2016
 Indiana,13,2012
 Indiana,13,2008
@@ -254,7 +254,7 @@ Indiana,11,1968
 Indiana,11,1964
 Indiana,11,1956
 Indiana,11,1952
-Iowa,10,2020
+Iowa,6,2020
 Iowa,10,2016
 Iowa,10,2012
 Iowa,9,2008
@@ -271,7 +271,7 @@ Iowa,7,1968
 Iowa,7,1964
 Iowa,6,1956
 Iowa,6,1952
-Kansas,8,2020
+Kansas,6,2020
 Kansas,8,2016
 Kansas,8,2012
 Kansas,7,2008
@@ -288,7 +288,7 @@ Kansas,6,1968
 Kansas,6,1964
 Kansas,6,1956
 Kansas,6,1952
-Kentucky,10,2020
+Kentucky,8,2020
 Kentucky,10,2016
 Kentucky,10,2012
 Kentucky,9,2008
@@ -305,7 +305,7 @@ Kentucky,8,1968
 Kentucky,8,1964
 Kentucky,8,1956
 Kentucky,8,1952
-Louisiana,10,2020
+Louisiana,8,2020
 Louisiana,10,2016
 Louisiana,10,2012
 Louisiana,10,2008
@@ -322,7 +322,7 @@ Louisiana,9,1968
 Louisiana,9,1964
 Louisiana,8,1956
 Louisiana,8,1952
-Maine,5,2020
+Maine,4,2020
 Maine,5,2016
 Maine,5,2012
 Maine,4,2008
@@ -339,7 +339,7 @@ Maine,4,1968
 Maine,4,1964
 Maine,4,1956
 Maine,4,1952
-Maryland,9,2020
+Maryland,10,2020
 Maryland,9,2016
 Maryland,9,2012
 Maryland,10,2008
@@ -356,7 +356,7 @@ Maryland,10,1968
 Maryland,10,1964
 Maryland,10,1956
 Maryland,10,1952
-Massachusetts,16,2020
+Massachusetts,11,2020
 Massachusetts,16,2016
 Massachusetts,16,2012
 Massachusetts,14,2008
@@ -373,7 +373,7 @@ Massachusetts,12,1968
 Massachusetts,12,1964
 Massachusetts,11,1956
 Massachusetts,11,1952
-Michigan,20,2020
+Michigan,16,2020
 Michigan,20,2016
 Michigan,20,2012
 Michigan,21,2008
@@ -390,7 +390,7 @@ Michigan,17,1968
 Michigan,17,1964
 Michigan,16,1956
 Michigan,16,1952
-Minnesota,11,2020
+Minnesota,10,2020
 Minnesota,11,2016
 Minnesota,11,2012
 Minnesota,10,2008
@@ -407,7 +407,7 @@ Minnesota,10,1968
 Minnesota,10,1964
 Minnesota,10,1956
 Minnesota,10,1952
-Mississippi,8,2020
+Mississippi,6,2020
 Mississippi,8,2016
 Mississippi,8,2012
 Mississippi,7,2008
@@ -424,7 +424,7 @@ Mississippi,6,1968
 Mississippi,6,1964
 Mississippi,6,1956
 Mississippi,6,1952
-Missouri,13,2020
+Missouri,10,2020
 Missouri,13,2016
 Missouri,13,2012
 Missouri,12,2008
@@ -441,7 +441,7 @@ Missouri,11,1968
 Missouri,11,1964
 Missouri,10,1956
 Missouri,10,1952
-Montana,4,2020
+Montana,3,2020
 Montana,4,2016
 Montana,4,2012
 Montana,4,2008
@@ -458,7 +458,7 @@ Montana,3,1968
 Montana,3,1964
 Montana,3,1956
 Montana,3,1952
-Nebraska,6,2020
+Nebraska,5,2020
 Nebraska,6,2016
 Nebraska,6,2012
 Nebraska,5,2008
@@ -475,7 +475,7 @@ Nebraska,5,1968
 Nebraska,5,1964
 Nebraska,5,1956
 Nebraska,5,1952
-Nevada,3,2020
+Nevada,6,2020
 Nevada,3,2016
 Nevada,3,2012
 Nevada,3,2008
@@ -509,7 +509,7 @@ New Hampshire,4,1968
 New Hampshire,4,1964
 New Hampshire,4,1956
 New Hampshire,4,1952
-New Jersey,16,2020
+New Jersey,14,2020
 New Jersey,16,2016
 New Jersey,16,2012
 New Jersey,17,2008
@@ -526,7 +526,7 @@ New Jersey,15,1968
 New Jersey,15,1964
 New Jersey,14,1956
 New Jersey,14,1952
-New Mexico,4,2020
+New Mexico,5,2020
 New Mexico,4,2016
 New Mexico,4,2012
 New Mexico,4,2008
@@ -543,7 +543,7 @@ New Mexico,5,1968
 New Mexico,5,1964
 New Mexico,5,1956
 New Mexico,5,1952
-New York,45,2020
+New York,29,2020
 New York,45,2016
 New York,45,2012
 New York,43,2008
@@ -560,7 +560,7 @@ New York,31,1968
 New York,31,1964
 New York,29,1956
 New York,29,1952
-North Carolina,14,2020
+North Carolina,15,2020
 North Carolina,14,2016
 North Carolina,14,2012
 North Carolina,13,2008
@@ -577,7 +577,7 @@ North Carolina,15,1968
 North Carolina,15,1964
 North Carolina,15,1956
 North Carolina,15,1952
-North Dakota,4,2020
+North Dakota,3,2020
 North Dakota,4,2016
 North Dakota,4,2012
 North Dakota,4,2008
@@ -594,7 +594,7 @@ North Dakota,3,1968
 North Dakota,3,1964
 North Dakota,3,1956
 North Dakota,3,1952
-Ohio,25,2020
+Ohio,18,2020
 Ohio,25,2016
 Ohio,25,2012
 Ohio,26,2008
@@ -611,7 +611,7 @@ Ohio,20,1968
 Ohio,20,1964
 Ohio,18,1956
 Ohio,18,1952
-Oklahoma,8,2020
+Oklahoma,7,2020
 Oklahoma,8,2016
 Oklahoma,8,2012
 Oklahoma,8,2008
@@ -628,7 +628,7 @@ Oklahoma,7,1968
 Oklahoma,7,1964
 Oklahoma,7,1956
 Oklahoma,7,1952
-Oregon,6,2020
+Oregon,7,2020
 Oregon,6,2016
 Oregon,6,2012
 Oregon,6,2008
@@ -645,7 +645,7 @@ Oregon,7,1968
 Oregon,7,1964
 Oregon,7,1956
 Oregon,7,1952
-Pennsylvania,32,2020
+Pennsylvania,20,2020
 Pennsylvania,32,2016
 Pennsylvania,32,2012
 Pennsylvania,29,2008
@@ -679,7 +679,7 @@ Rhode Island,4,1968
 Rhode Island,4,1964
 Rhode Island,4,1956
 Rhode Island,4,1952
-South Carolina,8,2020
+South Carolina,9,2020
 South Carolina,8,2016
 South Carolina,8,2012
 South Carolina,8,2008
@@ -696,7 +696,7 @@ South Carolina,8,1968
 South Carolina,8,1964
 South Carolina,9,1956
 South Carolina,9,1952
-South Dakota,4,2020
+South Dakota,3,2020
 South Dakota,4,2016
 South Dakota,4,2012
 South Dakota,4,2008
@@ -730,7 +730,7 @@ Tennessee,11,1968
 Tennessee,11,1964
 Tennessee,11,1956
 Tennessee,11,1952
-Texas,24,2020
+Texas,38,2020
 Texas,24,2016
 Texas,24,2012
 Texas,25,2008
@@ -747,7 +747,7 @@ Texas,34,1968
 Texas,34,1964
 Texas,38,1956
 Texas,38,1952
-Utah,4,2020
+Utah,6,2020
 Utah,4,2016
 Utah,4,2012
 Utah,4,2008
@@ -781,7 +781,7 @@ Vermont,3,1968
 Vermont,3,1964
 Vermont,3,1956
 Vermont,3,1952
-Virginia,12,2020
+Virginia,13,2020
 Virginia,12,2016
 Virginia,12,2012
 Virginia,12,2008
@@ -798,7 +798,7 @@ Virginia,13,1968
 Virginia,13,1964
 Virginia,13,1956
 Virginia,13,1952
-Washington,9,2020
+Washington,12,2020
 Washington,9,2016
 Washington,9,2012
 Washington,9,2008
@@ -815,7 +815,7 @@ Washington,11,1968
 Washington,11,1964
 Washington,12,1956
 Washington,12,1952
-West Virginia,8,2020
+West Virginia,5,2020
 West Virginia,8,2016
 West Virginia,8,2012
 West Virginia,7,2008
@@ -832,7 +832,7 @@ West Virginia,5,1968
 West Virginia,5,1964
 West Virginia,5,1956
 West Virginia,5,1952
-Wisconsin,12,2020
+Wisconsin,10,2020
 Wisconsin,12,2016
 Wisconsin,12,2012
 Wisconsin,12,2008

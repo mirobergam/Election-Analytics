@@ -9,6 +9,9 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
+library(gt)
+library(statebins)
+library(sjPlot)
 
 ```
 
@@ -186,6 +189,35 @@ ggsave("../figures/finalpredmap.jpg", height = 6, width = 10)
                     breaks = c("Biden", "Likely Biden", "Toss-Up", "Likely Trump", "Trump"))
   
 ggsave("../figures/finalelectoral.jpg", height = 2, width = 8)
+  
+```
+```{r, warning = FALSE, message = FALSE}
+
+prediction_df %>% 
+  ggplot(aes(state = state, fill = winner)) +
+  geom_statebins() +
+  theme_statebins() +
+  labs(title = "2020 Presidential Election State-Level Predictions",
+       fill = "",
+       caption = "Sources: The New York Times, Gallup, Five-Thirty-Eight") +
+  scale_fill_manual(values = c("#619CFF", "#F8766D"),
+                    breaks = c("Biden", "Trump"))
+
+ggsave("../figures/finalwinnermap.jpg", height = 6, width = 10)
+
+ prediction_df %>%
+  group_by(winner) %>%
+  summarise(ev = sum(electors)) %>%
+  ggplot(aes(x = "1", y = ev, fill = fct_relevel(winner, "Trump", "Biden"), label = ev)) +
+  geom_col(show.legend = FALSE, width = 0.25) + 
+  geom_text(position = position_stack(vjust = 0.5)) +
+  coord_flip() + 
+  theme_void() + 
+  labs(fill = "") +
+  scale_fill_manual(values = c("#619CFF", "#F8766D"),
+                    breaks = c("Biden", "Trump"))
+  
+ggsave("../figures/electoralwinner.jpg", height = 2, width = 8)
   
 ```
 

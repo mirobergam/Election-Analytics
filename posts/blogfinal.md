@@ -28,11 +28,15 @@ By feeding our model Trump's most recent approval ratings, he and Biden's pollin
 
 ![](../figures/finalpredmap.jpg)
 
-Based on this map, the states that still may swing in the direction of either candidate are Florida, Georgia, North Carolina, Pennsylvania, Nevada, and Arizona. These states are very important in determining the outcome of the election. With 258 electoral votes certain or very likely to go towards Biden, he is just 12 votes short of winning the presidency. Trump, with 207 electoral votes likely secured, will have to win the majority of these states, particularly Florida and Pennsylvania, to turn the election in his favor. 
+Based on this map, Florida, Georgia, North Carolina, Pennsylvania, Nevada, and Arizona all could swing in the direction of either candidate. These states will be very important in determining the outcome of the election. With 259 electoral votes certain or very likely to go towards Biden, he is just 12 votes short of winning the presidency. Trump, with 188 electoral votes likely secured, will have to win the majority of these states, particularly Florida and Pennsylvania, to turn the election in his favor. 
 
 ![](../figures/finalelectoral.jpg)
 
-Although these swing states may go in either direction, I predict, based on my model, that Biden will win Florida, Pennsylvania, Nevada, and Arizona, and Trump will win Georgia and North Carolina. This would ultimately result in Biden winning the election, garnering 57.8% of electoral votes: 307 for Biden and 231 and Trump. 
+My model predicts that Biden will win Florida, Pennsylvania, Nevada, and Arizona, and Trump will win Georgia and North Carolina - all by very tight margins. This would ultimately result in Biden garnering 57% of electoral votes and winning the election. Incorporating these projections, this would be the map and electoral vote count of the election: 
+
+![](../figures/finalwinnermap.jpg)
+
+![](../figures/electoralwinner.jpg)
 
 ### Uncertainty
 
