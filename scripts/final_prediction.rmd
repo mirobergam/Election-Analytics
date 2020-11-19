@@ -264,5 +264,104 @@ prediction_df %>%
   filter(group == "Toss-Up")
 ```
 
+```{r, warning = FALSE, message = FALSE}
+
+
+preds <- prediction_df %>%
+  select(state, predictions)
+
+results <- read_csv("../data/reflection/popvote_bystate_1948-2020.csv") %>%
+  filter(year == 2020) %>%
+  mutate(R_pv2p = R_pv2p * 100) %>%
+  select(state, R_pv2p)
+
+final <- read_csv("../data/abbrev.csv") %>%
+  select(State, Code) %>%
+  rename(state = Code) %>%
+  left_join(preds, by = "state") %>%
+  select(-state) %>%
+  rename(state = State) %>%
+  left_join(results, by = "state")
+
+final
+
+RMSE <- final %>%
+  mutate(error = predictions - R_pv2p) %>%
+  mutate(squared_error = error ^2) %>%
+  summarize(rmse = sqrt(mean(squared_error))) %>%
+  select(rmse) %>%
+  pull(1)
+
+
+brier <- final %>%
+  mutate(error = predictions - R_pv2p) %>%
+  mutate(squared_error = error ^2) %>%
+  summarize(brier = mean(squared_error)) %>%
+  select(brier) %>%
+  pull(1)
+
+lm_eqn <- function(df){
+    m <- lm(R_pv2p ~ predictions, df);
+    eq <- substitute(italic(R_pv2p) == a + b %.% italic(predictions)*","~~italic(r)^2~"="~r2, 
+         list(a = format(unname(coef(m)[1]), digits = 2),
+              b = format(unname(coef(m)[2]), digits = 2),
+             r2 = format(summary(m)$r.squared, digits = 3)))
+    as.character(as.expression(eq));
+}
+
+
+
+ggplot(final, aes(x = predictions, y = R_pv2p)) +
+  geom_point() + 
+  geom_abline() +
+  geom_smooth(method = "lm") + 
+  geom_text(x = 20, y = 60, label = lm_eqn(final), parse = TRUE) + 
+  labs(title = "Trump's Predicted v.s. Actual Two-Party Voteshare by State",
+       subtitle = "Predictions had an RMSE of 1.969 and Brier Score of 3.876",
+       y = "Trump's Actual Voteshare", 
+       x = "Trump's Predicted Voteshare") +
+  xlim(0, 70) + 
+  ylim(0, 70)
+
+ggsave("../figures/correctvoteshare.jpg", height = 5, width = 8)
+
+```
+
+```{r}
+lm(R_pv2p ~ predictions, data = final)
+```
+
+```{r}
+
+correct_map <- prediction_df %>%
+  select(state, predictions, winner)
+
+results <- results %>%
+  mutate(real_winner = ifelse(R_pv2p > 50, "Trump", "Biden"))
+
+correct <- read_csv("../data/abbrev.csv") %>%
+  select(State, Code) %>%
+  rename(state = Code) %>%
+  left_join(correct_map, by = "state") %>%
+  select(-state) %>%
+  rename(state = State) %>%
+  left_join(results, by = "state") %>%
+  mutate(correct = ifelse(winner != real_winner, "False", "True"))
+
+correct %>% 
+  ggplot(aes(state = state, fill = correct)) +
+  geom_statebins() +
+  theme_statebins() +
+  labs(title = "2020 Presidential Election Prediction Accuracy",
+       fill = "",
+       caption = "Sources: The New York Times, Gallup, Five-Thirty-Eight") +
+  scale_fill_manual(values = c("#26994E", "#D54632"),
+                    breaks = c("True", "False"))
+
+ggsave("../figures/correctmap.jpg", height = 6, width = 10)
+
+```
+
+
 
 

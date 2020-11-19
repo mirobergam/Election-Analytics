@@ -18,17 +18,17 @@ We can take a deeper look at the data to see more precisely how Trump's polling 
 
 ![](../figures/covidplot50.jpg)
 
-This plot depicts, for every state, Trump's daily polling average as the percentage of the state population with COVID increases. The y-axis depicts percentage of state population rather than the raw number of cases to put the states of greatly varying sizes on a similar scale. 
+This plot depicts, for every state, Trump's daily polling average as the percentage of the state population that has tested positive for COVID increases. The y-axis depicts this rather than the raw number of cases to put states of greatly varying sizes on a similar scale. 
 
 It's difficult to pick out trends in this crowded format, so we'll zero in on some specific states next.
 
 ![](../figures/covidplots.jpg)
 
-The plot on the left highlights the 5 states in which Trump's polling averages were most strongly, negatively correlated with the number of COVID cases. These were determined by adding `state` as an interaction term with `pct_sick_transform` in the model, and picking out the most negative interaction coefficients that were significant.
+The plot on the left highlights the 5 states in which Trump's polling averages were most strongly and negatively correlated with the number of COVID cases. These were determined by adding `state` as an interaction term with `pct_sick_transform` in the model, and picking out the most negative interaction coefficients that were significant.
 
 In each of these states, the downward trend is strong and clear. These states are all moderately to strongly liberal, with none of the polling averages for Trump surpassing 50% at any point. 
 
-The plot on the right depicts the relationship for some of the swing states in the 2020 election. Notably, Trump's polling experienced an initial, dramatic fall for all of these states with the exception of Ohio. However, as the number of COVID cases grew even larger in these swing states, Trump's polling climbed or stabilized. In North Carolina, Florida, Pennsylvania, and Michigan, Trump bounced all the way back to or above his pre-COVID polling numbers. 
+The plot on the right depicts this relationship for some of the swing states in the 2020 election. Notably, Trump's polling experienced an initial, dramatic fall for all of these states with the exception of Ohio. However, as the number of COVID cases grew even larger in these swing states, Trump's polling climbed or stabilized. In North Carolina, Florida, Pennsylvania, and Michigan, Trump bounced all the way back to or above his pre-COVID polling numbers. 
 
 These trends indicate that voters reacted strongly to the initial wave of infections, holding Trump accountable as they likely had their first experiences with social distancing and lockdown measures. As the virus progressed through its second wave, however, Trump's polling climbed, either due to his lost supporters assigning their blame for the virus elsewhere or Trump garnering other supporters as the campaign season heated up through the late summer and fall. 
 
