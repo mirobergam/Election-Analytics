@@ -164,7 +164,7 @@ prediction_df <- cbind(predictions, states) %>%
 
 ```{r, warning = FALSE, message = FALSE}
 
-prediction_df %>% 
+graph1 <- prediction_df %>% 
   ggplot(aes(state = state, fill = group)) +
   geom_statebins() +
   theme_statebins() +
@@ -193,7 +193,7 @@ ggsave("../figures/finalelectoral.jpg", height = 2, width = 8)
 ```
 ```{r, warning = FALSE, message = FALSE}
 
-prediction_df %>% 
+graph2 <- prediction_df %>% 
   ggplot(aes(state = state, fill = winner)) +
   geom_statebins() +
   theme_statebins() +
@@ -205,7 +205,7 @@ prediction_df %>%
 
 ggsave("../figures/finalwinnermap.jpg", height = 6, width = 10)
 
- prediction_df %>%
+prediction_df %>%
   group_by(winner) %>%
   summarise(ev = sum(electors)) %>%
   ggplot(aes(x = "1", y = ev, fill = fct_relevel(winner, "Trump", "Biden"), label = ev)) +
@@ -359,6 +359,16 @@ correct %>%
                     breaks = c("True", "False"))
 
 ggsave("../figures/correctmap.jpg", height = 6, width = 10)
+
+```
+```{r}
+
+library(cowplot)
+
+plot_grid(graph1, graph2)
+
+ggsave("../figures/comparison.jpg", height = 6, width = 15)
+
 
 ```
 
