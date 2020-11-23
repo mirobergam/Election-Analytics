@@ -15,3 +15,5 @@ This election analysis blog will updated weekly with articles analyzing U.S. pre
 ### [COVID's Impact on the 2020 Election](posts/blog7.md)
 
 ### [Final 2020 Presidential Election Prediction](posts/blogfinal.md)
+
+### [2020 Presidential Election Prediction Reflectio](posts/predictionreflection.md)
