@@ -38,16 +38,20 @@ Quinnipaic and other predicted Democratic wins in the state of Florida for Hilla
 
 One reason for this could be a higher survey response from Democrats. Regarding this election, David Shorr said that Democrats began responding to polls at higher rates once we entered quarantining months for COVID-19, with the survey response rate for Democrats jumping from 12% to roughly 16%. This may have had a hand in inflating the polling numbers for Biden in Florida and across the country. You may note, however, that even 16% is not a high response rate. In general, low survey response rates are another reason that polling led to be a source of error. This non-response may be accentuated for Republicans, as a means of concealing their controversial political beliefs in a mixed, swing state like Florida. 
 
-Another reason was that polls did a poor job  of choosing a sample that is representative of the electorate. The 2020 presidential election saw record voter turnout on both sides. The unprecedented nature of cycle's turnout poses a difficult challenge for pollsters, who are tasking with choosing a sample that is representative for an electorate that isn't yet fully understood. In Florida, where the data for turnout is availible, there are 1.5% more registered Democrats than Republicans. However, there were 2% more registered Republicans who voted than registered Democrats who voted. This help explains why pollsters underpredicted Trump in Florida: they may not have expected this surge of Republican voters in the state. It's also important to address Trump's surprising performance among Hispanic voters, particularly Cuban-Americans. It was anticipated that Biden would experience a landslide victory within this group, but in the end he may just barely win the Hispanic vote in Florida. 
+Another reason was that polls did a poor job  of choosing a sample that is representative of the electorate. The 2020 presidential election saw record voter turnout on both sides. The unprecedented nature of cycle's turnout poses a difficult challenge for pollsters, who are tasking with choosing a sample that is representative for an electorate that isn't yet fully understood. In Florida, where the data for turnout is available, there are 1.5% more registered Democrats than Republicans. However, there were 2% more registered Republicans who voted than registered Democrats who voted. This help explains why pollsters underpredicted Trump in Florida: they may not have expected this surge of Republican voters in the state. It's also important to address Trump's surprising performance among Hispanic voters, particularly Cuban-Americans. It was anticipated that Biden would experience a landslide victory within this group, but in the end he may just barely win the Hispanic vote in Florida. 
 
-Another source of error was the way in which I incorporated historical voting trends. I believe that, for many states, only using 2016 vote shares worked to my model's advantage. For example, my correct predictions for Iowa and North Carolina were likely anchored by Trump's win in the two states in 2016. For Georgia, however, Trump's win in 2016 is likely what led to my erroneous prediction for Trump. The poll averages I incorporated predicted a narrow win for Biden, which abets my theory that the 2016 vote shares offset this specific prediction. 
+Another source of error was the way in which I incorporated historical voting trends. I believe that, for many states, using just the 2016 vote shares worked to my model's advantage. For example, my correct predictions for Iowa and North Carolina were likely anchored by Trump's win in the two states in 2016. For Georgia, however, Trump's win in 2016 is likely what led to my incorrect prediction for Trump. The poll averages I incorporated predicted a narrow win for Biden, which abets my theory that the 2016 vote shares offset this specific prediction. 
 
 ### Discussion
 
 
+If I were to redo my model, I would more aggressively vet, discard, and weight polls based on their 538 grades and previous accuracy, rather than averaging all polls like my model did. By more heavily weighting pollsters that have accurately predicted difficult-to-poll states like Florida in the past and discarding pollsters with a significant partisan lean, I may have been able to diminish the negative effect of the exaggerated polling for Biden.
+
+![](../figures/repubpoll.jpg)
+
+In the graph above, the majority of the points being to the left of the y = x line demonstrates how pollsters in 2012, 2016, and 2020 have consistently under-predicted the vote shares of Republican candidates. I would either transform the polling data, shifting it in the Republican direction to account for the highly consistent Democratic bias, or exclude polls with the strongest Democratic leans.
 
 
-If I were to change my model, I would more aggressively vet, discard, and weight polls based on their 538 grades and previous accuracy. By more heavily weighting pollsters that have accurately predicted difficult-to-poll states like Florida in the past and discarding pollsters with a significant partisan lean (particularly for Democratic candidates), I may have been able to diminish the negative affect of the exaggerated polling for Biden. Despite incorrectly predicting Georgia, I would continue to utilize the voting history of the previous election, as I believe this factor 
 
 
 - A recap of your model(s) and your predictions. [CHECK]
@@ -60,8 +64,7 @@ If I were to change my model, I would more aggressively vet, discard, and weight
 
 - A description of how you might change your model if you were to do it again.[CHECK]
 
-This blog post may be longer than a typical blog post (remember it accounts for 17.5% of your total grade).  
-It is due November 23 by 9PM. 
+November 23 by 9PM. 
 
 
 
