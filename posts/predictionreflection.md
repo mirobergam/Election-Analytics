@@ -30,39 +30,35 @@ Additionally, my model had an RMSE of 1.969 and a Brier Score of 3.876. The RMSE
 
 ### Source of Error
 
-I hypothesize that polling inaccuracy and short-term historical voting trends were my model's sources of error. 
+I hypothesize that polling inaccuracy and the use of short-term historical voting trends were my model's sources of error. 
 
-Because Trump narrowly won Florida in 2016, it is most likely the state's polling that led to my incorrect prediction of Biden winning. 
+Because Trump narrowly won Florida in 2016, it is most likely Trump's low polling average of 46.9% led to my incorrect prediction of Biden winning. [Quinnipiac, along with many other notable pollsters, predicted Democratic wins](https://news.wjct.org/post/look-why-florida-presidential-polls-were-wrong) in the state of Florida for Hillary Clinton in the 2016 Presidential Election, Andrew Gillum in the 2018 gubernatorial race, Bill Nelson in the 2014 Senate race, and President-Elect Biden in this election. All of these were incorrect, as the Republican candidate won all four of these races in Florida. This consistency points to a systemic bias in the Democratic direction regarding Florida polls. This Democratic lean is not limited to the state of Florida:
 
-Quinnipaic and other predicted Democratic wins in the state of Florida for Hillary Clinton in the 2016 Presidential Election, Andrew Gillum in the 2018 gubernatorial race, Bill Nelson in the 2014 Senate race, and Biden in 2020. All of these were incorrect; Republicans won all four races in Florida. This points to a systemic error in the Democratic direction regarding Florida polls. 
+![](../figures/repubpoll.jpg)
 
-One reason for this could be a higher survey response from Democrats. Regarding this election, David Shorr said that Democrats began responding to polls at higher rates once we entered quarantining months for COVID-19, with the survey response rate for Democrats jumping from 12% to roughly 16%. This may have had a hand in inflating the polling numbers for Biden in Florida and across the country. You may note, however, that even 16% is not a high response rate. In general, low survey response rates are another reason that polling led to be a source of error. This non-response may be accentuated for Republicans, as a means of concealing their controversial political beliefs in a mixed, swing state like Florida. 
+The graph above displays the pre-election polling averages for each state in the 2012, 2016, and 2020 elections plotted against the state's true Republican vote shares. The majority of the points being to the left of the y = x line demonstrates how pollsters in 2012, 2016, and 2020 have consistently under-predicted the vote shares of Republican candidates. My other predictors did not successfully cancel out this polling error for Florida in 2020.
 
-Another reason was that polls did a poor job  of choosing a sample that is representative of the electorate. The 2020 presidential election saw record voter turnout on both sides. The unprecedented nature of cycle's turnout poses a difficult challenge for pollsters, who are tasking with choosing a sample that is representative for an electorate that isn't yet fully understood. In Florida, where the data for turnout is available, there are 1.5% more registered Democrats than Republicans. However, there were 2% more registered Republicans who voted than registered Democrats who voted. This help explains why pollsters underpredicted Trump in Florida: they may not have expected this surge of Republican voters in the state. It's also important to address Trump's surprising performance among Hispanic voters, particularly Cuban-Americans. It was anticipated that Biden would experience a landslide victory within this group, but in the end he may just barely win the Hispanic vote in Florida. 
+One reason for this Democratic polling bias in Florida and across the country for this election cycle may have been a disproportionately high survey response rate from Democrats. As the COVID-19 pandemic began and individuals spent their springs and summers in quarantine, [Democrats began to engage with polls and surveys at much higher rates](https://www.vox.com/policy-and-politics/2020/11/10/21551766/election-polls-results-wrong-david-shor). By connecting survey responses to voter files, it was revealed that there was a surge of survey responses from individuals who were linked to other Democratic institutions, such as being regular ActBlue donors. This phenomenon likely played a heavy hand in inflating polling numbers for Biden. I theorize that the opposite effect was present for Republican voters: the effect of voters falsifying their true preference for Trump due to social pressure and a lower civic engagement with polls and surveys deflated the true support for Trump in the state. 
 
-Another source of error was the way in which I incorporated historical voting trends. I believe that, for many states, using just the 2016 vote shares worked to my model's advantage. For example, my correct predictions for Iowa and North Carolina were likely anchored by Trump's win in the two states in 2016. For Georgia, however, Trump's win in 2016 is likely what led to my incorrect prediction for Trump. The poll averages I incorporated predicted a narrow win for Biden, which abets my theory that the 2016 vote shares offset this specific prediction. 
+Another reason for the Democratic polling bias was pollsters did a poor job of choosing a sample that is representative of the electorate. The 2020 Presidential Election saw record voter turnout on both sides. The unprecedented turnout of this cycle poses a difficult challenge for pollsters, who are tasked with choosing a sample that is representative for an electorate that wasn't yet fully understood. For example, the polling error. This may have been a factor in Trump's surprising performance among Hispanic voters, particularly Cuban-Americans. It was anticipated that Biden would experience a landslide victory within this group, but in the end he may just barely win the Hispanic vote in Florida. If the preferences of this group properly 
+
+Another source of error was the way in which I incorporated historical voting trends. I believe that, for many states, using just the 2016 vote shares worked to my model's advantage. For example, my correct predictions for Iowa and North Carolina were likely anchored by Trump's win in the two states in 2016. For Georgia, however, Trump's win in 2016 is likely what led to my incorrect prediction for Trump. The poll averages I incorporated predicted a narrow win for Biden in Georgia, which abets my theory that the 2016 vote shares offset this specific prediction. 
 
 ### Discussion
 
 
 If I were to redo my model, I would more aggressively vet, discard, and weight polls based on their 538 grades and previous accuracy, rather than averaging all polls like my model did. By more heavily weighting pollsters that have accurately predicted difficult-to-poll states like Florida in the past and discarding pollsters with a significant partisan lean, I may have been able to diminish the negative effect of the exaggerated polling for Biden.
 
-![](../figures/repubpoll.jpg)
-
-In the graph above, the majority of the points being to the left of the y = x line demonstrates how pollsters in 2012, 2016, and 2020 have consistently under-predicted the vote shares of Republican candidates. I would either transform the polling data, shifting it in the Republican direction to account for the highly consistent Democratic bias, or exclude polls with the strongest Democratic leans.
+As you can see in figure 4, pollsters since 2012 have consistently under-predicted Republican state vote shares in presidential elections. Another change I would make to my model is transforming the polling data, shifting it a couple of points in the Republican direction to account for the highly consistent Democratic bias in recent elections, or exclude polls with the strongest Democratic leans.
 
 
 
 
-- A recap of your model(s) and your predictions. [CHECK]
-
-- A description of the accuracy of the model(s), including any apparent patterns in the accuracy.  Graphics should be used here. [CHECK]
 
 - Proposed hypotheses for why the model(s) were inaccurate in the estimates or locations where it was inaccurate.  These reasons should not simply be statements of about the quality of the components of the model, e.g., “the polls were not good” or “economic growth was not a good predictor” but should instead be grounded hypotheses on why components of the model may not have been predictive or may not have been predictive in certain cases.
 
 - Proposed quantitative tests that could test these hypotheses, e.g., what data, if available, could allow you to test whether the reason proposed really did cause the inaccuracy in your model.  If there is no plausible test of the hypothesis, explain why.  You do not need to perform these tests or explain them in great detail (e.g., there is no need to write down an equation showing your exact test), just propose them.
 
-- A description of how you might change your model if you were to do it again.[CHECK]
 
 November 23 by 9PM. 
 
