@@ -28,7 +28,7 @@ This graph visualizes the accuracy my predictions for Trump's vote share in each
 
 Additionally, my model had an RMSE of 1.969 and a Brier Score of 3.876. The RMSE measures the standard deviation of the residuals, or the the variation in my error margins for each state. Brier score is a similar measure of accuracy, simply being RMSE raised to the second power. 
 
-### Source of Error
+### Sources of Error
 
 I hypothesize that polling inaccuracy and the use of short-term historical voting trends were my model's sources of error. 
 
@@ -40,27 +40,14 @@ The graph above displays the pre-election polling averages for each state in the
 
 One reason for this Democratic polling bias in Florida and across the country for this election cycle may have been a disproportionately high survey response rate from Democrats. As the COVID-19 pandemic began and individuals spent their springs and summers in quarantine, [Democrats began to engage with polls and surveys at much higher rates](https://www.vox.com/policy-and-politics/2020/11/10/21551766/election-polls-results-wrong-david-shor). By connecting survey responses to voter files, it was revealed that there was a surge of survey responses from individuals who were linked to other Democratic institutions, such as being regular ActBlue donors. This phenomenon likely played a heavy hand in inflating polling numbers for Biden. I theorize that the opposite effect was present for Republican voters: the effect of voters falsifying their true preference for Trump due to social pressure and a lower civic engagement with polls and surveys deflated the true support for Trump in the state. 
 
-Another reason for the Democratic polling bias was pollsters did a poor job of choosing a sample that is representative of the electorate. The 2020 Presidential Election saw record voter turnout on both sides. The unprecedented turnout of this cycle poses a difficult challenge for pollsters, who are tasked with choosing a sample that is representative for an electorate that wasn't yet fully understood. For example, the polling error. This may have been a factor in Trump's surprising performance among Hispanic voters, particularly Cuban-Americans. It was anticipated that Biden would experience a landslide victory within this group, but in the end he may just barely win the Hispanic vote in Florida. If the preferences of this group properly 
+Another reason for the Democratic polling bias could be that pollsters did a poor job of choosing a sample that is representative of the electorate. The 2020 Presidential Election saw record voter turnout on both sides. The unprecedented turnout of this cycle poses a difficult challenge for pollsters, who are tasked with choosing a sample that is representative for an electorate that wasn't yet fully understood. For example, the polling error. This may have been a factor in Trump's surprising performance among Hispanic voters, particularly Cuban-Americans. It was anticipated that Biden would experience a landslide victory within this group, but in the end he may [just barely win the Hispanic vote in Florida](https://www.cnn.com/2020/09/30/opinions/florida-cubans-trump-propaganda-martinez/index.html). It's possible that Trump-supporting Hispanic voters were not represented in the pollsters' samples. 
 
 Another source of error was the way in which I incorporated historical voting trends. I believe that, for many states, using just the 2016 vote shares worked to my model's advantage. For example, my correct predictions for Iowa and North Carolina were likely anchored by Trump's win in the two states in 2016. For Georgia, however, Trump's win in 2016 is likely what led to my incorrect prediction for Trump. The poll averages I incorporated predicted a narrow win for Biden in Georgia, which abets my theory that the 2016 vote shares offset this specific prediction. 
 
 ### Discussion
 
+One quantitative test I would employ to test my hypothesis on Democratic polling bias as a source of error would involve connecting the responses to polls throughout the election cycle to the respondent's voter information, such as what party they are registered under. Once I obtained this data, I would compare the survey response rates of the two parties in each survey to the number of registered Republicans and Democrats in the state. I would look for a discrepancy between the party breakdown of each state and the survey response rates that points to inflated response rate among Democrats. If I discovered this discrepacy to exist, it would aid my theory that a Democratic lean in the polls is what lead to my incorrect prediction of Florida. 
 
 If I were to redo my model, I would more aggressively vet, discard, and weight polls based on their 538 grades and previous accuracy, rather than averaging all polls like my model did. By more heavily weighting pollsters that have accurately predicted difficult-to-poll states like Florida in the past and discarding pollsters with a significant partisan lean, I may have been able to diminish the negative effect of the exaggerated polling for Biden.
 
 As you can see in figure 4, pollsters since 2012 have consistently under-predicted Republican state vote shares in presidential elections. Another change I would make to my model is transforming the polling data, shifting it a couple of points in the Republican direction to account for the highly consistent Democratic bias in recent elections, or exclude polls with the strongest Democratic leans.
-
-
-
-
-
-- Proposed hypotheses for why the model(s) were inaccurate in the estimates or locations where it was inaccurate.  These reasons should not simply be statements of about the quality of the components of the model, e.g., “the polls were not good” or “economic growth was not a good predictor” but should instead be grounded hypotheses on why components of the model may not have been predictive or may not have been predictive in certain cases.
-
-- Proposed quantitative tests that could test these hypotheses, e.g., what data, if available, could allow you to test whether the reason proposed really did cause the inaccuracy in your model.  If there is no plausible test of the hypothesis, explain why.  You do not need to perform these tests or explain them in great detail (e.g., there is no need to write down an equation showing your exact test), just propose them.
-
-
-November 23 by 9PM. 
-
-
-
