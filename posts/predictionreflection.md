@@ -51,3 +51,13 @@ One quantitative test I would employ to test my hypothesis on Democratic polling
 If I were to redo my model, I would more aggressively vet, discard, and weight polls based on their 538 grades, rather than averaging all polls like my model did. By more heavily weighting pollsters that have accurately predicted difficult-to-poll states like Florida in the past and discarding pollsters with a significant partisan lean, I may have been able to diminish the negative effect of the exaggerated polling for Biden.
 
 As you can see in figure 4, pollsters have consistently under-predicted Republican state vote shares for the last several presidential elections. Another change I would make to my model is introducing a transformation the polling data, shifting it a couple of points in the Republican direction to corrct for the highly consistent Democratic bias in recent elections.
+
+### Sources
+
+[Trump’s Florida Election Win Hinged on Big Gains in Miami-Dade](https://www.wsj.com/articles/trumps-florida-election-win-hinged-on-big-gains-in-miami-dade-11604518272)
+
+[Polls Prove to Be 2020 Election’s Big Losers](https://www.baynews9.com/fl/tampa/news/2020/11/04/2020-election-polling-proves-to-be-wrong-in-florida)
+
+[A Look At Why Florida Presidential Polls Were Wrong](https://news.wjct.org/post/look-why-florida-presidential-polls-were-wrong)
+
+[Why Florida's Cuban population is susceptible to Trump's propaganda](https://www.cnn.com/2020/09/30/opinions/florida-cubans-trump-propaganda-martinez/index.html)
