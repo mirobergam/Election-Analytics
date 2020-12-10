@@ -1,4 +1,4 @@
-Date as of,First week,Last week,State,County,fips,Deaths involving COVID-19,Deaths from All Causes
+Date,First week,Last week,State,County,fips,covid_deaths,deaths
 10/21/2020,02/01/2020,10/17/2020,AK,Anchorage Borough,2020,35,1458
 10/21/2020,02/01/2020,10/17/2020,AK,Fairbanks North Star Borough,2090,13,340
 10/21/2020,02/01/2020,10/17/2020,AL,Autauga County,1001,25,363

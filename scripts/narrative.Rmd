@@ -1,0 +1,179 @@
+---
+title: "Narrative"
+author: "Miroslav Bergam"
+date: "12/6/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readxl)
+```
+
+```{r, warning = FALSE, message = FALSE}
+
+votes_2020 <- read_csv("../data/reflection/popvote_bystate_1948-2020.csv") %>%
+  filter(year == 2020) %>%
+  mutate(D_pv2p_2020 = D_pv2p,
+         R_pv2p_2020 = R_pv2p,
+         D_pv2p_2020 = D_pv2p_2020 * 100,
+         R_pv2p_2020 = R_pv2p_2020 * 100,
+         Party = ifelse(D > R, "Biden", "Trump")) %>%
+  select(state, D_pv2p_2020, R_pv2p_2020, Party)
+
+votes_2016 <- read_csv("../data/reflection/popvote_bystate_1948-2020.csv") %>%
+  filter(year == 2016)  %>%
+  mutate(D_pv2p_2016 = D_pv2p,
+         R_pv2p_2016 = R_pv2p) %>%
+  select(state, D_pv2p_2016, R_pv2p_2016) 
+
+votes <- votes_2020 %>%
+  left_join(votes_2016, by = "state")
+
+votes <- votes %>%
+  mutate(rep_change = R_pv2p_2016 - R_pv2p_2020,
+         dem_change = D_pv2p_2016 - D_pv2p_2020)
+
+abbrev <- read_csv("../data/abbrev.csv") %>%
+  mutate(state = State) %>%
+  select(Code, state)
+
+votes <- votes %>%
+  left_join(abbrev, by = "state") %>%
+  select(-state) %>%
+  rename(state = Code)
+
+state_covid <- read_csv("../data/Covid_state.csv") 
+statepops <- read_xlsx("../data/state_population.xlsx") %>%
+  select(state, total)
+
+state_covid <- state_covid %>%
+  left_join(statepops, by = "state") %>%
+  mutate(pct_sick = tot_cases/total) %>%
+  filter(submission_date == "10/23/2020") %>%
+  select(state, tot_cases, pct_sick) %>%
+  drop_na()
+
+votes <- votes %>%
+  left_join(state_covid, by = "state")
+  
+
+# Plot state covid deaths V.S. change in republican voteshare 2016 to 2020
+# Plot how trump's support didn't waver throughout waves of pandemic 
+# Plot how trump getting covid didn't change his support
+
+```
+
+
+```{r}
+
+votes %>%
+  ggplot(aes(R_pv2p_2016, R_pv2p_2020, color = pct_sick)) + 
+  geom_point()
+
+votes %>%
+  ggplot(aes(pct_sick, rep_change)) + 
+  geom_point()
+
+```
+
+
+```{r, warning = FALSE, message = FALSE}
+
+covid_county <- read_csv("../data/COVID_county.csv") %>%
+  mutate(covid_death_ratio = covid_deaths/deaths,
+         fips = as.numeric(fips)) %>%
+  select(fips, covid_deaths, covid_death_ratio)
+
+vote_county_2020 <- read_csv("../data/popvote_bycounty_2020.csv") %>%
+  slice(-1) %>%
+  select(FIPS, total, Trump, Biden) %>%
+  mutate(Party = ifelse(Biden > Trump, "Biden", "Trump"), 
+         D_pv2p_2020 = as.numeric(Biden) / as.numeric(total),
+         R_pv2p_2020 = as.numeric(Trump) / as.numeric(total),
+         D_win_margin = (D_pv2p_2020 - R_pv2p_2020) *100,
+         fips = as.numeric(FIPS)) %>%
+  rename(D_win_margin_2020 = D_win_margin) %>%
+  select(Party, fips, D_win_margin_2020)
+
+vote_county_2016 <- read_csv("../data/popvote_bycounty_2000-2016.csv") %>%
+  filter(year == 2016) %>%
+  rename(D_win_margin_2016 = D_win_margin) %>%
+  mutate(fips = as.numeric(fips)) %>%
+  select(fips, D_win_margin_2016)
+  
+votes_county <- vote_county_2020 %>%
+  left_join(vote_county_2016, by = "fips") %>%
+  left_join(covid_county, by = "fips") %>%
+  mutate(dem_change = D_win_margin_2020 - D_win_margin_2016,
+         D_win_margin_2016 = as.numeric(D_win_margin_2016), 
+         D_win_margin_2020 = as.numeric(D_win_margin_2020)) %>%
+  drop_na()
+
+```
+
+```{r}
+
+votes_county %>%
+  ggplot(aes(covid_death_ratio, dem_change, color = Party)) + 
+  geom_point() +
+  labs(y = "Change in Democratic Win Margin ",
+       x = "Ratio of COVID Deaths to Overall Deaths",
+       title = "COVID Death Ratio by Change in Democratic Win Margin Between 2020 and 2016") + 
+  scale_color_manual(values = c("#619CFF", "#F8766D"),
+                    breaks = c("Biden", "Trump"))
+
+votes_county %>%
+  ggplot(aes(D_win_margin_2016, D_win_margin_2020, color = covid_death_ratio)) + 
+  geom_point() +
+  labs(y = "Democratic Win Margin in 2020",
+       x = "Democratic Win Margin in 2016",
+       title = "Democratic Win Margins Between 2016 and 2020",
+       color = "COVID Death to \nOverall Death Ratio")
+
+```
+
+Polls v Covid
+polls v Actual votes to explain 
+
+```{r, warning = FALSE, message = FALSE}
+
+polls_new <- read_csv("../data/polls_recent.csv") %>%
+  mutate(end_date = as.Date(end_date, "%m/%d/%y")) %>%
+  filter(end_date >= "2020-10-26") %>%
+  group_by(state) %>%
+  filter(candidate_party == "DEM") %>%
+  summarise(dem_avg = mean(pct)) %>%
+  mutate(D_win_margin_2020_poll = dem_avg - 50) %>%
+  select(D_win_margin_2020_poll, state)
+
+polls_new <- polls_new %>%
+  left_join(abbrev, by = "state") %>%
+  select(-state) %>%
+  rename(state = Code)
+
+votes_new <- votes %>%
+  mutate(D_win_margin_2016 = D_pv2p_2016 - 50) %>%
+  select(Party, state, D_win_margin_2016, pct_sick, tot_cases)
+
+polls_new <- polls_new %>%
+  left_join(votes_new, by = "state") %>%
+  drop_na() %>%
+  mutate(dem_change = D_win_margin_2020_poll - D_win_margin_2016)
+
+```
+
+```{r}
+
+polls_new %>%
+  ggplot(aes(pct_sick, dem_change, color = Party)) + 
+  geom_point() +
+  scale_color_manual(values = c("#619CFF", "#F8766D"),
+                    breaks = c("Biden", "Trump")) + 
+  labs(x)
+
+```
+
+
+
