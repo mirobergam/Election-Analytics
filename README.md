@@ -17,3 +17,5 @@ This election analysis blog will updated weekly with articles analyzing U.S. pre
 ### [Final 2020 Presidential Election Prediction](posts/blogfinal.md)
 
 ### [2020 Presidential Election Prediction Reflection](posts/predictionreflection.md)
+
+### [Election Narrative Analysis: Did COVID-19 Help or Hurt Trump?](posts/narrative.md)

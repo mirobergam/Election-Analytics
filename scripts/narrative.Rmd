@@ -106,9 +106,9 @@ vote_county_2016 <- read_csv("../data/popvote_bycounty_2000-2016.csv") %>%
 votes_county <- vote_county_2020 %>%
   left_join(vote_county_2016, by = "fips") %>%
   left_join(covid_county, by = "fips") %>%
-  mutate(dem_change = D_win_margin_2020 - D_win_margin_2016,
-         D_win_margin_2016 = as.numeric(D_win_margin_2016), 
-         D_win_margin_2020 = as.numeric(D_win_margin_2020)) %>%
+  mutate(D_win_margin_2016 = as.numeric(D_win_margin_2016), 
+         D_win_margin_2020 = as.numeric(D_win_margin_2020),
+         dem_change = D_win_margin_2020 - D_win_margin_2016) %>%
   drop_na()
 
 ```
@@ -122,7 +122,10 @@ votes_county %>%
        x = "Ratio of COVID Deaths to Overall Deaths",
        title = "COVID Death Ratio by Change in Democratic Win Margin Between 2020 and 2016") + 
   scale_color_manual(values = c("#619CFF", "#F8766D"),
-                    breaks = c("Biden", "Trump"))
+                    breaks = c("Biden", "Trump")) + 
+  geom_smooth(method = "lm")
+
+ggsave("../figures/narrative1.jpg", height = 5, width = 8)
 
 votes_county %>%
   ggplot(aes(D_win_margin_2016, D_win_margin_2020, color = covid_death_ratio)) + 
@@ -130,12 +133,30 @@ votes_county %>%
   labs(y = "Democratic Win Margin in 2020",
        x = "Democratic Win Margin in 2016",
        title = "Democratic Win Margins Between 2016 and 2020",
-       color = "COVID Death to \nOverall Death Ratio")
+       color = "COVID Death to \nOverall Death Ratio") +
+  geom_abline()
+
+ggsave("../figures/narrative2.jpg", height = 5, width = 8)
 
 ```
 
-Polls v Covid
-polls v Actual votes to explain 
+
+```{r}
+
+votes_county_model <- votes_county %>%
+  mutate(covid_death_ratio = covid_death_ratio*10)
+
+model = lm(dem_change ~ covid_death_ratio * Party, data = votes_county_model)
+
+summary(model)
+
+tab_model(model,
+          title = "COVID's Impact on Party Vote Shares",
+          dv.labels = "Change in Democratic Support Between 2016 and 2020")
+
+png("../figures/summarytable.png", height=1000, width=200)
+
+```
 
 ```{r, warning = FALSE, message = FALSE}
 
@@ -171,7 +192,12 @@ polls_new %>%
   geom_point() +
   scale_color_manual(values = c("#619CFF", "#F8766D"),
                     breaks = c("Biden", "Trump")) + 
-  labs(x)
+  labs(y = "Expected Change in Democratic Win Margin ",
+       x = "Cumulative Percentage of Population with COVID",
+       title = "Expected Change in Democratic Win Margin by Percentage Infected with COVID",
+       subtitle = "Expected change calculated by comparing 2016 win margin with 2020 polling win margins")
+
+ggsave("../figures/narrative3.jpg", height = 5, width = 8)
 
 ```
 
