@@ -4,7 +4,7 @@ _By Miroslav Bergam_
 
 _December 10th, 2020_
 
-A dominant media narrative leading up to the 2020 election was that COVID-19 would be Trump's demise. 
+A dominant media narrative leading up to the 2020 election was that COVID-19 would be Trump's demise. While most were cautious to speak with certainty about such an unprecendeted election, a popular theory leading up to the election was that Trump's management (or mismanagement) of COVID-19 would lead to a loss of support in the electorate. [Major news networks](https://www.bbc.com/news/election-us-2020-54390559) and [publications](https://www.nytimes.com/2020/07/28/upshot/polling-trump-virus-election.html) anticipated this phenomenon. 
 
 ![](../figures/narrative2.jpg)
 
@@ -20,13 +20,13 @@ This plot, which visualizes the change in the Democratic win margins against the
 
 Indeed, this table tells us that with each increase in 0.1 in the COVID death ratio, there was an average decrease in Democratic support of 3.37% points. The interaction term shows that this effect is mitigated for Republicans, which reflects the Democrat line showing a stronger downward trend in the plot above. 
 
-This doesn't necessarily mean that an increase in COVID deaths has a causal effect on support for Trump. In other words, the relationship may be present an ecological fallacy. There are many factors that are [highly correlated](https://www-healthaffairs-org.ezp-prod1.hul.harvard.edu/doi/10.1377/hlthaff.2020.01040) with a high concentration of COVID deaths in a community including income level, race, access to healthcare, and population density. Any of these factors, in addition to efforts in the Trump campaign to appeal to these counties, could instead explain the relationship. 
+This doesn't necessarily mean that an increase in COVID deaths has a causal effect on support for Trump. In other words, the relationship may be present an ecological fallacy. There are many factors that are [highly correlated](https://www-healthaffairs-org.ezp-prod1.hul.harvard.edu/doi/10.1377/hlthaff.2020.01040) with a high concentration of COVID deaths in a community including income level, race, access to healthcare, and population density. Any of these factors, in addition to efforts in the Trump campaign to appeal to these counties, could instead explain the relationship. Another likely hypothesis is that turnout was lower among Democrats in areas that were hit hardest by the virus, with more COVID-cautious Democrats being less likely to risk a journey to the polls.  
 
 Regardless of the source of the relationship, why did forecasters, the media, and much of the general public believe that Trump's handling of COVID-19 would negatively impact him in the 2020 election when it appears to be the opposite? For starters, the connection is intuitive. Trump [severely mismanaged](https://www.theatlantic.com/magazine/archive/2020/06/underlying-conditions/610261/) the pandemic, failing to treat the public emergency with gravity and shifting the responsibility of lock-downs and regulations to local and state governments. However, a more quantitative answer to this question brings us to the polls:
 
 ![](../figures/narrative3.jpg)
 
-Because polls are largely unavailable on a county-level, I had to shift my analysis to the states. On the y-axis, I put the expected change in Democratic win margins between 2016 and 2020 - that is, the Democratic state win margins based on most recent poll averages prior to the 2020 election minus the 2016 win margins. I plotted this against the percentage of the population that has cumulatively been infected with COVID. This plot shows a slight upward trend, indicating that the polls anticipated higher Democratic support in states that were hit harder by COVID-19. Although we trade off a lot detail by only looking at states, this implies that polling errors contributed to the hypothesis that Trump being punished for COVID.  
+Because polls are largely unavailable on a county-level, I had to shift my analysis to the states. On the y-axis, I put the expected change in Democratic win margins between 2016 and 2020 - that is, the Democratic state win margins based on most recent poll averages prior to the 2020 election minus the 2016 win margins. I plotted this against the percentage of the population that has cumulatively been infected with COVID. This plot shows a slight upward trend, indicating that the polls anticipated higher Democratic support in states that were hit harder by COVID-19. This contributed to the media narrative that the pandemic would hurt Trump; one example is a [New York Times article](https://www.nytimes.com/2020/07/28/upshot/polling-trump-virus-election.html) that predicts a loss of Trump votes as COVID deaths increase. Although we trade off a lot detail by only looking at states, this implies that polling errors contributed to the hypothesis that Trump being punished for COVID.  
 
 ![](../figures/repubpoll.jpg)
 
