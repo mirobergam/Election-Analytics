@@ -118,9 +118,11 @@ votes_county <- vote_county_2020 %>%
 votes_county %>%
   ggplot(aes(covid_death_ratio, dem_change, color = Party)) + 
   geom_point() +
-  labs(y = "Change in Democratic Win Margin ",
+  labs(y = "Change in Democratic Win Margins",
        x = "Ratio of COVID Deaths to Overall Deaths",
-       title = "COVID Death Ratio by Change in Democratic Win Margin Between 2020 and 2016") + 
+       title = "County-Level COVID Death Ratio by \nChange in Democratic Win Margin Between 2020 and 2016",
+       color = "Winning Candidate",
+       caption = "Sources: The New York Times, FiveThirtyEight") + 
   scale_color_manual(values = c("#619CFF", "#F8766D"),
                     breaks = c("Biden", "Trump")) + 
   geom_smooth(method = "lm")
@@ -132,8 +134,9 @@ votes_county %>%
   geom_point() +
   labs(y = "Democratic Win Margin in 2020",
        x = "Democratic Win Margin in 2016",
-       title = "Democratic Win Margins Between 2016 and 2020",
-       color = "COVID Death to \nOverall Death Ratio") +
+       title = "County-Level Democratic Win Margins Between 2016 and 2020",
+       color = "COVID Death to \nOverall Death Ratio",
+       caption = "Sources: The New York Times, FiveThirtyEight") +
   geom_abline()
 
 ggsave("../figures/narrative2.jpg", height = 5, width = 8)
@@ -195,7 +198,9 @@ polls_new %>%
   labs(y = "Expected Change in Democratic Win Margin ",
        x = "Cumulative Percentage of Population with COVID",
        title = "Expected Change in Democratic Win Margin by Percentage Infected with COVID",
-       subtitle = "Expected change calculated by comparing 2016 win margin with 2020 polling win margins")
+       subtitle = "Expected change calculated by comparing 2016 win margin with 2020 polling win margins",
+       color = "Winning Candidate",
+       caption = "Sources: The New York Times, FiveThirtyEight")
 
 ggsave("../figures/narrative3.jpg", height = 5, width = 8)
 
