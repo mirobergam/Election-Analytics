@@ -468,7 +468,8 @@ true %>%
   #geom_text(x = 20, y = 60, label = lm_eqn(final), parse = TRUE) + 
   labs(title = "Trump's Actual vs Predicted 2020 Vote Shares",
        y = "Actual Republican Vote Share", 
-       x = "Republican State-Level Polling Average") +
+       x = "Republican State-Level Polling Average",
+       caption = "Sources: The New York Times, FiveThirtyEight") +
   xlim(0, 70) + 
   ylim(0, 70) + 
   theme(legend.position = "none")
